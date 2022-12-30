@@ -1,0 +1,39 @@
+{% extends "base.tera.html" %}
+
+{% block header %}
+{{ super() }}
+<ol class="breadcrumb">
+  {% for path in page.ancestors %}
+  {# If it is a section #}
+  {% if path is ending_with("_index.md") %}
+  {% set sect_info = get_section(path=path) %}
+  <li><a href="/{{path | replace(from='_index.md', to='')}}">{{sect_info.title | default(value="Home")}}</a></li>
+  {# otherwise, it is a page #}
+  {% else %}
+  {% set page_info = get_section(path=path) %}
+  <li><a href="/{{path | replace(from='_index.md', to='')}}">{{page_info.title | default(value="Home")}}</a></li>
+  {% endif %}
+  {% endfor %}
+  <li><a href="{{page.path}}">{{page.title}}</a></li>
+</ol>
+{% endblock %}
+{% block content %}
+{% if page.title %}
+<hgroup>
+  <h1 class="title">
+    {{ page.title }}
+  </h1>
+  <p class="subtitle">
+    {% if page.date %}
+    <strong>First Created: {{ page.date }}</strong>
+    {% endif %}
+    {% if page.updated %}
+    <strong>Latest Update: {{ page.updated }}</strong>
+    {% endif %}
+  </p>
+</hgroup>
+{% else %}
+<h1>Unknown Page</h1>
+{% endif %}
+{{ page.content | safe }}
+{% endblock content %}

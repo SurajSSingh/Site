@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% block head_info %}
+  <meta charset="utf-8">
+  <title>MyBlog</title>
+  <link rel="stylesheet" href="/pico.fluid.classless.css">
+  {% endblock head_info %}
+</head>
+
+<body>
+  <header>
+    {% block header %}
+    {% set blog_index = get_url(path="@/blog/_index.md") %}
+    {% set notes_index = get_url(path="@/notes/_index.md") %}
+    <nav>
+      <ul>
+        <li><a href='{{get_url(path="/")}}'> Homepage</a></li>
+      </ul>
+      <ul>
+        <li><a href='{{blog_index}}'> Blog</a></li>
+        <li><a href='{{notes_index}}'> Notes</a></li>
+      </ul>
+    </nav>
+    {% endblock %}
+  </header>
+  <main>
+    {% block content %} {% endblock %}
+  </main>
+  <footer>
+    {% block footer %}
+    <p> Created with Zola and Pico.CSS</p>
+    {% endblock %}
+  </footer>
+</body>
+
+</html>
