@@ -1,0 +1,6 @@
+<a href='{{info.link | default(value="#")}}' data-tooltip='{{info.name | default(value="Homepage")}}'>
+    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" class='{{info.class | default(value="feather")}}'>
+        <use href='feather-sprite.svg{{info.image.rel_link | default(value="#circle")}}' />
+    </svg>
+</a>

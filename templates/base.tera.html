@@ -33,6 +33,9 @@
   <footer>
     {% block footer %}
     <p> Created with Zola and Pico.CSS</p>
+    {% for website in config.extra.external_link %}
+    {{macros::feather_svg(info=website)}}
+    {% endfor %}
     {% endblock %}
   </footer>
 </body>
