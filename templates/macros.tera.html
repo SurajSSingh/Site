@@ -1,0 +1,16 @@
+{% macro accordion(label, link, level=0, children=false, is_list_item=true) %}
+{% if children is iterable and children | length > 0%}
+<details open>
+    <summary> <a href="{{link}}">{{label}}</a></summary>
+    <ul>
+        {% for child in children %}
+        <li>{{self::accordion(label=child.title, link=child.permalink, level=child.level, children=child.children)}}</li>
+        {% endfor %}
+    </ul>
+</details>
+{% elif is_list_item %}
+<li><a href="{{link}}">{{label}}</a></summary>
+</li>
+{%else%}
+{% endif %}
+{% endmacro accordion %}

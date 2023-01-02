@@ -1,0 +1,14 @@
+<ol class="breadcrumb">
+    {% for path in page.ancestors %}
+    {# If it is a section #}
+    {% if path is ending_with("_index.md") %}
+    {% set sect_info = get_section(path=path) %}
+    <li><a href="/{{path | replace(from='_index.md', to='')}}">{{sect_info.title | default(value="Home")}}</a></li>
+    {# otherwise, it is a page #}
+    {% else %}
+    {% set page_info = get_section(path=path) %}
+    <li><a href="/{{path | replace(from='_index.md', to='')}}">{{page_info.title | default(value="Home")}}</a></li>
+    {% endif %}
+    {% endfor %}
+    <li><a href="{{page.path}}">{{page.title}}</a></li>
+</ol>

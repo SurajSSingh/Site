@@ -35,15 +35,15 @@ details {
     }
 
     // Marker
-    &::after {
+    &::before {
       display: block;
       width: 1rem;
       height: 1rem;
       margin-inline-start: calc(var(--spacing, 1rem) * 0.5);
-      float: right;
+      float: left;
       transform: rotate(-90deg);
       background-image: var(--icon-chevron);
-      background-position: right center;
+      background-position: left center;
       background-size: 1rem auto;
       background-repeat: no-repeat;
       content: "";
@@ -67,16 +67,18 @@ details {
       text-align: left;
 
       // Marker
-      &::after {
+      &::before {
         height: calc(1rem * var(--line-height, 1.5));
         background-image: var(--icon-chevron-button);
       }
 
       @if $enable-classes {
+
         // .contrast
         &:not(.outline).contrast {
+
           // Marker
-          &::after {
+          &::before {
             background-image: var(--icon-chevron-button-inverse);
           }
         }
@@ -86,7 +88,7 @@ details {
 
   // Open
   &[open] {
-    > summary {
+    >summary {
       margin-bottom: calc(var(--spacing));
 
       &:not([role]) {
@@ -95,7 +97,7 @@ details {
         }
       }
 
-      &::after {
+      &::before {
         transform: rotate(0);
       }
     }
@@ -107,9 +109,9 @@ details {
     summary {
       text-align: right;
 
-      &::after {
-        float: left;
-        background-position: left center;
+      &::before {
+        float: right;
+        background-position: right center;
       }
     }
   }

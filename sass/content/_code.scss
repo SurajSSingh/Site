@@ -47,7 +47,7 @@ pre {
   margin-bottom: var(--spacing);
   overflow-x: auto;
 
-  > code {
+  >code {
     display: block;
     padding: var(--spacing);
     background: none;
@@ -56,8 +56,18 @@ pre {
   }
 }
 
+pre[data-lang]::before {
+  background-color: var(--code-kbd-background-color);
+  color: var(--code-kbd-color);
+  vertical-align: baseline;
+  display: inline-block;
+  padding: 0.375rem 0.5rem;
+  content: attr(data-lang);
+}
+
 // Code Syntax
 code {
+
   // Tags
   b {
     color: var(--code-tag-color);
