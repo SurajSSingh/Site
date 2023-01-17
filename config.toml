@@ -97,12 +97,12 @@ smart_punctuation = false
 [link_checker]
 # Skip link checking for external URLs that start with these prefixes
 skip_prefixes = [
-#    "http://[2001:db8::]/",
+    #    "http://[2001:db8::]/",
 ]
 
 # Skip anchor checking for external URLs that start with these prefixes
 skip_anchor_prefixes = [
-#    "https://caniuse.com/",
+    #    "https://caniuse.com/",
 ]
 
 # Treat internal link problems as either "error" or "warn", default is "error"
@@ -190,4 +190,9 @@ include_content = true
 [[extra.external_link]]
 name = "GitHub"
 link = "https://github.com/SurajSSingh/"
-image = {type="svg", rel_link="#github"}
+image = { type = "svg", rel_link = "github" }
+
+[[extra.external_link]]
+name = "Linkedin"
+link = "https://www.linkedin.com/in/suraj-s-singh/"
+image = { type = "svg", rel_link = "linkedin" }
