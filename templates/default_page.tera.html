@@ -1,0 +1,44 @@
+{% extends "base.tera.html" %}
+
+{% block header %}
+{{ super() }}
+{% if page.extra.include_breadcrumb | default(value=true) %}
+{% include "includes/page/breadcrumbs.tera.html" %}
+{% endif %}
+{% endblock %}
+{% block top_aside %}
+{{ super() }}
+{% if page.extra.include_toc | default(value=true) %}
+{% include "includes/page/toc.tera.html" %}
+{% endif %}
+{% endblock %}
+{% block content %}
+
+{% if page.title %}
+<hgroup>
+    <h1 id="#">
+        {{ page.title }}
+    </h1>
+    <p>
+        {% if page.date %}
+        <strong>First Created: {{ page.date }}</strong>
+        {% endif %}
+    </p>
+    <p>
+        {% if page.updated %}
+        <strong>Latest Update: {{ page.updated }}</strong>
+        {% endif %}
+    </p>
+    <p>
+        <em>License: {{ page.extra.license | default(value="CC BY-SA-NC") }}</em>
+    </p>
+</hgroup>
+{% else %}
+<h1>Unknown Page</h1>
+{% endif %}
+{{ page.content | safe }}
+
+{% if page.extra.allow_comments %}
+{% include "includes/page/giscus_comments.tera.html" %}
+{% endif %}
+{% endblock content %}
