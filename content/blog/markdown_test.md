@@ -1,6 +1,10 @@
 +++
 title = "Makrdown Test"
 date = 2022-12-29
+updated = 2023-02-01
+
+[extra]
+allow_comments = true
 +++
 # Heading 1 with \#
 
@@ -51,6 +55,8 @@ Hyphens for horizontal lines
 ___ 
 Underscore for horizontal line
 
+Here's a sentence with a footnote. [^1]
+
 *single asterisks*
 
 _single underscores_
@@ -61,17 +67,16 @@ __double underscores__
 
 ~~Two tildes.~~
 
-| Syntax      | Description | Test Text     |
+| Left      | Center | Right     |
 | :---        |    :----:   |          ---: |
 | Header      | Title       | Here's this   |
 | Paragraph   | Text        | And more      |
 
-Here's a sentence with a footnote. [^1]
 
 - [x] Completed Task list
 - [ ] Uncomplete Task list
 
-[^1]: This is the footnote.
 
 [Note1]: https://youtube.com "Youtube"
 [referenced link with implicit name]: https://youtube.com "Youtube Again"
+[^1]: This is the footnote.
