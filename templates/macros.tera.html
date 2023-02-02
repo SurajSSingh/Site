@@ -15,10 +15,10 @@
 {% endif %}
 {% endmacro accordion %}
 
-{% macro feather_svg(info)%}
+{% macro feather_svg(info, stroke="currentColor")%}
 {% include "shortcodes/feather_svg.html" %}
 {% endmacro feather_svg %}
 
-{% macro feather_svg_direct(link, name, rel_link, placement="top", class="")%}
+{% macro feather_svg_direct(link, name, rel_link, placement="top", class="", stroke="currentColor")%}
 {% include "shortcodes/feather_svg.html" %}
 {% endmacro feather_svg %}

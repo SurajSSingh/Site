@@ -24,7 +24,7 @@
   <footer>
     {% block footer %}
     {% for website in config.extra.external_link %}
-    {{macros::feather_svg(info=website)}}
+    {{macros::feather_svg(info=website, stroke="var(--primary)")}}
     {% endfor %}
     <p>© 2023 Suraj S Singh</p>
     <p> Created with <a href="https://www.getzola.org/">Zola</a>, <a href="https://picocss.com/">Pico.CSS</a>, and <a
