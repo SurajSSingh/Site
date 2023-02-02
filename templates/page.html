@@ -9,7 +9,7 @@
 {% block top_aside %}
 {{ super() }}
 {% if page.extra.include_toc | default(value=true) %}
-{% include "includes/page/toc.html" %}
+{% include "includes/page/toc.tera.html" %}
 {% endif %}
 {% endblock %}
 {% block content %}
@@ -39,17 +39,6 @@
 {{ page.content | safe }}
 
 {% if page.extra.allow_comments %}
-<article>
-    <header>Powered by Giscus</header>
-    <script src="https://giscus.app/client.js" data-repo="SurajSSingh/Site" data-repo-id="R_kgDOICIt2g" data-category="Comments"
-        data-category-id="DIC_kwDOICIt2s4CTop9" data-mapping="pathname" data-strict="1" data-reactions-enabled="1"
-        data-emit-metadata="0" data-input-position="top" data-theme="preferred_color_scheme" data-lang="en" data-loading="lazy"
-        crossorigin="anonymous" async>
-        </script>
-    <noscript>
-        <p>Comments cannot be rendered</p>
-    </noscript>
-    <footer>You have reached the end of the comments!</footer>
-</article>
+{% include "includes/page/giscus_comments.tera.html" %}
 {% endif %}
 {% endblock content %}
