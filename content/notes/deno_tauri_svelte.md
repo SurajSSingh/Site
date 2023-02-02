@@ -1,8 +1,14 @@
 +++
 title = "Deno+Tauri+Svelte: How I got things setup"
 date = 2023-01-01
+updated = 2023-01-16
+
+[extra]
+allow_comments = true
 +++
 
+This is a note to setup Deno and Tauri using Rust's Cargo package manager and inside Svelte through Deno using NPM compatibility.  
+<!-- more -->
 ## Installations
 
 ### Deno
