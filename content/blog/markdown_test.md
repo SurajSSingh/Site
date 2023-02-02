@@ -5,6 +5,7 @@ updated = 2023-02-01
 
 [extra]
 allow_comments = true
+render_mermaid = true
 +++
 # Heading 1 with \#
 
@@ -21,8 +22,6 @@ Heading 2 with underline
 ##### Heading 5
 ###### Heading 6
 
-***
-Asterisk for horizontal lines
 
 This is a paragraph
 
@@ -79,4 +78,39 @@ __double underscores__
 
 [Note1]: https://youtube.com "Youtube"
 [referenced link with implicit name]: https://youtube.com "Youtube Again"
+
+***
+Asterisk for horizontal lines
+
+# Extra stuff (rendered when needed)
+
+```mermaid
+---
+title: Animal example
+---
+classDiagram
+    note "From Duck till Zebra"
+    Animal <|-- Duck
+    note for Duck "can fly\ncan swim\ncan dive\ncan help in debugging"
+    Animal <|-- Fish
+    Animal <|-- Zebra
+    Animal : +int age
+    Animal : +String gender
+    Animal: +isMammal()
+    Animal: +mate()
+    class Duck{
+        +String beakColor
+        +swim()
+        +quack()
+    }
+    class Fish{
+        -int sizeInFeet
+        -canEat()
+    }
+    class Zebra{
+        +bool is_wild
+        +run()
+    }
+```
+
 [^1]: This is the footnote.

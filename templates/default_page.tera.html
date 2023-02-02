@@ -1,5 +1,29 @@
 {% extends "base.tera.html" %}
 
+{% block head_info %}
+{{ super() }}
+{% if page.extra.render_mermaid | default(value=false) %}
+{# Adapted from https://github.com/elixir-lang/ex_doc#rendering-mermaid-graphs #}
+<script type="module" defer>
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@9/+esm';
+    mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+    let id = 0;
+    for (const codeEl of document.querySelectorAll("pre.language-mermaid code.language-mermaid")) {
+        const preEl = codeEl.parentElement;
+        const graphDefinition = codeEl.textContent;
+        const graphEl = document.createElement("div");
+        const graphId = "mermaid-graph-" + id++;
+        mermaid.render(graphId, graphDefinition, function (svgSource, bindListeners) {
+            graphEl.innerHTML = svgSource;
+            bindListeners && bindListeners(graphEl);
+            preEl.insertAdjacentElement("beforebegin", graphEl);
+            // preEl.remove();
+        });
+    }
+</script>
+{% endif %}
+{% endblock head_info %}
+
 {% block header %}
 {{ super() }}
 {% if page.extra.include_breadcrumb | default(value=true) %}
