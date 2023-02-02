@@ -2,9 +2,19 @@
 
 {% block content %}
 
-<h1 class="title">
-    {{ section.title }}
-</h1>
+<hgroup>
+    <h1>
+        {{ section.title }}
+    </h1>
+    {% if section.description %}
+    <p>
+        {{section.description}}
+    </p>
+    {% endif %}
+</hgroup>
+
+{{section.content | safe}}
+
 <!-- If you are using pagination, section.pages will be empty. You need to use the paginator object -->
 <div class="grid">
     {% for page in section.pages %}

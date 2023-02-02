@@ -3,8 +3,11 @@
 {% block header %}
 {{ super() }}
 {% if page.extra.include_breadcrumb | default(value=true) %}
-{% include "includes/page/breadcrumbs.html" %}
+{% include "includes/page/breadcrumbs.tera.html" %}
 {% endif %}
+{% endblock %}
+{% block top_aside %}
+{{ super() }}
 {% if page.extra.include_toc | default(value=true) %}
 {% include "includes/page/toc.html" %}
 {% endif %}

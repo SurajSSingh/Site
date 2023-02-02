@@ -1,0 +1,17 @@
+<nav>
+    <ul>
+        <li>
+            {{macros::feather_svg_direct(link=get_url(path="/"), name="Homepage", rel_link="home",
+            placement="right")}}
+        </li>
+    </ul>
+    {# <input type="search" name="" id=""> #}
+    {% if config.extra.nav_sections %}
+    <ul>
+        {% for section_name in config.extra.nav_sections %}
+        {% set info = get_section(path=section_name~"/_index.md", metadata_only=true) %}
+        <li><a href='{{info.permalink}}'> {{info.title}}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</nav>

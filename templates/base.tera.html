@@ -6,30 +6,21 @@
   {% block head_info %}
   <meta charset="utf-8">
   <title>MyBlog</title>
-  <base href="{{config.base_url}}">
-  <link rel="stylesheet" href="pico.fluid.classless.css">
+  <link rel="stylesheet" href="/pico.fluid.classless.css">
   {% endblock head_info %}
 </head>
 
 <body>
   <header>
     {% block header %}
-    {% set notes_index = get_url(path="@/notes/_index.md") %}
-    <nav>
-      <ul>
-        <li>{{macros::feather_svg_direct(link=get_url(path="/"), name="Homepage", rel_link="home",
-          placement="right")}}</li>
-      </ul>
-      <ul>
-        <li><a href='{{get_url(path="@/blog/_index.md")}}'> Blog</a></li>
-        <li><a href='{{notes_index}}'> Notes</a></li>
-      </ul>
-    </nav>
+    {% include "includes/default/header.tera.html" %}
     {% endblock %}
   </header>
+  <aside>{% block top_aside %} {% endblock %}</aside>
   <main>
     {% block content %} {% endblock %}
   </main>
+  <aside>{% block bottom_aside %} {% endblock %}</aside>
   <footer>
     {% block footer %}
     {% for website in config.extra.external_link %}

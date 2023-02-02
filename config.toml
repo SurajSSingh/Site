@@ -180,6 +180,8 @@ include_content = true
 # author value will be available using {{ config.extra.author }} in templates
 #
 
+nav_sections = ["blog", "notes"]
+
 # Array of links to external website
 # Minimum requirement: 
 #   * name: string 
