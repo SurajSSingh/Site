@@ -5,8 +5,8 @@
 {% set class = info.class | default(value="feather")%}
 {% set rel_link = info.image.rel_link | default(value="circle")%}
 {% endif %}
-<a href='{{link | default(value="#")}}' data-tooltip='{{name | default(value="Homepage")}}'
-    data-placement='{{placement | default(value="top")}}'>
+<a href='{{link | default(value="#")}}' title='{{name | default(value="Title")}}'
+    data-tooltip='{{name | default(value="Homepage")}}' data-placement='{{placement | default(value="top")}}'>
     <svg width="36" height="36" fill="none" stroke="{{stroke}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
         class='{{class | default(value="feather")}}'>
         <use href='{{config.base_url}}feather-sprite.svg#{{rel_link | default(value="circle")}}' />
