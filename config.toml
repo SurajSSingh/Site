@@ -64,14 +64,17 @@ feed_filename = "atom.xml"
 # Whether to do syntax highlighting
 # Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
 # When set to "true", all code blocks are highlighted.
-highlight_code = true
+highlight_code = false
 
 # A list of directories used to search for additional `.sublime-syntax` and `.tmTheme` files.
 extra_syntaxes_and_themes = []
 
 # The theme to use for code highlighting.
 # See https://www.getzola.org/documentation/getting-started/configuration/#syntax-highlighting for list of allowed values.
-highlight_theme = "ayu-dark"
+highlight_themes_css = [
+    { theme = "ayu-dark", filename = "syntax-theme-dark.css" },
+    { theme = "ayu-light", filename = "syntax-theme-light.css" },
+]
 
 # When set to "true", emoji aliases translated to their corresponding
 # Unicode emoji equivalent in the rendered Markdown files. (e.g.: :smile: => 😄)
