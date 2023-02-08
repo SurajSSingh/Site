@@ -15,3 +15,120 @@ tbody tr:hover {
 #{$semantic-root-element}>footer {
     text-align: center
 }
+// Table of content
+aside>nav {
+
+    // When on large screen, table of content can appear on left side of screen
+    // @if map-get($breakpoints, "lg") {
+    //     @media (min-width: map-get($breakpoints, "lg")) {
+    //         float: left;
+    //     }
+    // }
+
+    padding: var(--spacing);
+    margin-bottom: var(--spacing);
+    border-bottom: var(--border-width) solid var(--accordion-border-color);
+
+    details {
+        border-bottom: 0px solid red;
+
+        a {
+            display: inline;
+        }
+
+        &>ol {
+            padding: 0 var(--spacing);
+
+            li {
+                margin: 0 calc(var(--nav-element-spacing-horizontal) * 3);
+            }
+        }
+
+        summary {
+            line-height: 1rem;
+            list-style-type: none;
+            cursor: pointer;
+
+            &:not([role]) {
+                color: var(--accordion-close-summary-color);
+            }
+
+            @if $enable-transitions {
+                transition: color var(--transition);
+            }
+
+            // Reset marker
+            &::-webkit-details-marker {
+                display: none;
+            }
+
+            &::marker {
+                display: none;
+            }
+
+            &::-moz-list-bullet {
+                list-style-type: none;
+            }
+
+            // Marker
+            &::after {
+                display: block;
+                width: 1rem;
+                height: 1rem;
+                margin-inline-start: calc(var(--spacing, 1rem) * 0.5);
+                float: left;
+                transform: rotate(-90deg);
+                background-image: var(--icon-chevron);
+                background-position: left center;
+                background-size: 1rem auto;
+                background-repeat: no-repeat;
+                content: "";
+
+                @if $enable-transitions {
+                    transition: transform var(--transition);
+                }
+            }
+
+            &:focus {
+                outline: dotted var(--primary);
+                color: var(--accordion-active-summary-color);
+            }
+        }
+
+        // Open
+        &[open] {
+            >summary {
+                margin-bottom: calc(var(--spacing));
+
+                &:not([role]) {
+                    &:not(:focus) {
+                        color: var(--accordion-open-summary-color);
+                    }
+                }
+
+                &::after {
+                    transform: rotate(0);
+                }
+            }
+        }
+    }
+
+    &[dir="rtl"] {
+        details {
+            summary {
+                text-align: right;
+
+                &::after {
+                    float: left;
+                    background-position: left center;
+                }
+            }
+        }
+    }
+}
+
+// @if map-get($breakpoints, "lg") {
+//     @media (min-width: map-get($breakpoints, "lg")) {
+//         aside+main {}
+//     }
+// }
