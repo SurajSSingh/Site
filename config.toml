@@ -3,7 +3,7 @@
 base_url = "https://surajssingh.github.io/Site/"
 
 # The site title and description; used in feeds by default.
-title = "SurajSSingh Blog"
+title = "Tech Tree Blog"
 description = "A blog made by Suraj S Singh"
 
 # The default language; used in feeds.

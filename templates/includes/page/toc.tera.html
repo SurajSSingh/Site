@@ -1,10 +1,12 @@
 {% if page.toc %}
-<details>
-    <summary>Table Of Contents</summary>
-    <ul>
-        <li>
-            {{macros::accordion(label=page.title, link=page.permalink ~ '#', level=1, children=page.toc)}}
-        </li>
-    </ul>
-</details>
+<nav>
+    <details>
+        <summary>Table Of Contents</summary>
+        <ol>
+            <li>
+                {{macros::accordion(label=page.title, link=page.permalink ~ '#', level=1, children=page.toc)}}
+            </li>
+        </ol>
+        </details>
+</nav>
 {% endif %}

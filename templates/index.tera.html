@@ -1,9 +1,25 @@
 {% extends "base.tera.html" %}
 
-{% block content %}
+{% block header %}
+<hgroup>
+  <h1>Tech Tree Blog</h1>
+  <p>by Suraj S. Singh</p>
+</hgroup>
+{% endblock %}
 
-<h1>
-  Welcome to my Site
-</h1>
-<p> Welcome to my blog page. This site has some of my blog post, public notes, and game information. </p>
+{% block title %}
+{% if page.title %}
+{{ "Home | " ~ config.title}}
+{% else %}
+{{super()}}
+{% endif %}
+{% endblock title %}
+
+{% block content %}
+<p> Welcome to Tech Tree Blog website. This is the home of my blog post, public notes, and games. Here are some
+  sections of interest:</p>
+{% for section_name in config.extra.nav_sections %}
+{% set info = get_section(path=section_name~"/_index.md") %}
+{{macros::article_card(info=info)}}
+{% endfor %}
 {% endblock content %}

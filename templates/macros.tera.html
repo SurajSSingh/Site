@@ -2,16 +2,16 @@
 {% if children is iterable and children | length > 0%}
 <details open>
     <summary> <a href="{{link}}">{{label}}</a></summary>
-    <ul>
+    <ol>
         {% for child in children %}
         <li>{{self::accordion(label=child.title, link=child.permalink, level=child.level, children=child.children)}}</li>
         {% endfor %}
-    </ul>
+    </ol>
 </details>
 {% elif is_list_item %}
-<li><a href="{{link}}">{{label}}</a></summary>
-</li>
+<a href="{{link}}">{{label}}</a>
 {%else%}
+<li><a href="{{link}}">{{label}}</a></li>
 {% endif %}
 {% endmacro accordion %}
 
@@ -22,3 +22,63 @@
 {% macro feather_svg_direct(link, name, rel_link, placement="top", class="", stroke="currentColor")%}
 {% include "shortcodes/feather_svg.html" %}
 {% endmacro feather_svg %}
+{% macro article_card(info)%}
+<article>
+    <header>
+        <hgroup>
+            <a href="{{ info.permalink | safe }}">
+                <h1>{{ info.title }}</h1>
+                <p>{{info.description}}</p>
+            </a>
+            {% set latest_date = [] %}
+            {% if info.subsections %}
+            {% set latest_date = latest_date | concat(with=info.subsections | map(attribute="date")) |
+            concat(with=info.subsections |
+            map(attribute="updated")) %}
+            {% endif %}
+            {% if info.pages %}
+            {% set latest_date = latest_date | concat(with=info.pages | map(attribute="date") | concat(with=info.pages |
+            map(attribute="updated"))) %}
+            {% endif %}
+            <p>
+                {% if latest_date %}
+                Latest Update: {{latest_date | sort | last}}
+                {% elif info.updated %}
+                Latest Update: {{info.updated }}
+                {% elif info.date %}
+                Latest Update: {{info.date }}
+                {% endif %}
+            </p>
+        </hgroup>
+    </header>
+    {% if info.summary %}
+    {{info.summary | safe}}
+    <a href="{{ info.permalink }}#continue-reading"><small> Continue Reading... </small></a>
+    {% endif %}
+    {% if info.subsections %}
+    <details>
+        <summary>
+            Subsections: {{info.subsections | length}}
+        </summary>
+        <ul>
+            {% for subsection_path in info.subsections %}
+            {% set subsection = get_section(path=subsection_path) %}
+            <li><a href="{{subsection.permalink}}">{{subsection.title}}</a></li>
+            {% endfor %}
+        </ul>
+    </details>
+    {% endif %}
+    {% if info.pages %}
+    <details>
+        <summary>
+            Pages in Section: {{info.pages | length}}
+        </summary>
+        <ul>
+            {% for page in info.pages %}
+            <li><a href="{{page.permalink}}">{{page.title}}</a></li>
+            {% endfor %}
+        </ul>
+    </details>
+    {% endif %}
+</article>
+{% endmacro article_card %}
