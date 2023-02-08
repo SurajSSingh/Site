@@ -33,7 +33,6 @@ td {
 
 // Footer
 tfoot {
-
   th,
   td {
     border-top: var(--border-width) solid var(--table-border-color);
@@ -48,11 +47,4 @@ table {
       background-color: var(--table-row-stripped-background-color);
     }
   }
-}
-
-// Customized
-
-// Cell Highlight on hover
-tbody tr:hover {
-  background-color: var(--primary-focus);
 }

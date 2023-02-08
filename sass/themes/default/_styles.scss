@@ -77,11 +77,10 @@
 
 // Responsives spacings
 @if $enable-responsive-spacings {
-
-  // Sectionning
-  body>header,
-  body>main,
-  body>footer,
+  // Sectioning
+    #{$semantic-root-element}>header,
+    #{$semantic-root-element}>main,
+    #{$semantic-root-element}>footer,
   section {
     @if map-get($breakpoints, "sm") {
       @media (min-width: map-get($breakpoints, "sm")) {
@@ -136,7 +135,7 @@
   }
 
   // Modal
-  dialog>article {
+                                dialog>article {
 
     --block-spacing-vertical: calc(var(--spacing) * 2);
     --block-spacing-horizontal: var(--spacing);
@@ -163,7 +162,6 @@ a {
 
   // Secondary & Contrast
   @if $enable-classes {
-
     &.secondary,
     &.contrast {
       --text-decoration: underline;
@@ -224,7 +222,6 @@ h5 {
 // Table
 thead,
 tfoot {
-
   th,
   td {
     --border-width: 3px;

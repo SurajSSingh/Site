@@ -1,0 +1,17 @@
+pre[data-lang]::before {
+    background-color: var(--code-kbd-background-color);
+    color: var(--code-kbd-color);
+    vertical-align: baseline;
+    display: inline-block;
+    padding: 0.375rem 0.5rem;
+    content: attr(data-lang);
+}
+
+// Cell Highlight on hover
+tbody tr:hover {
+    background-color: var(--primary-focus);
+}
+// Body footer centers text
+#{$semantic-root-element}>footer {
+    text-align: center
+}
