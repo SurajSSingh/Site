@@ -1,6 +1,6 @@
 ############ GENERAL SETTINGS ############
 # The URL the site will be built for
-base_url = "https://surajssingh.github.io/Site/"
+base_url = "https://surajssingh.github.io/Tech-Tree-Blog/"
 
 # The site title and description; used in feeds by default.
 title = "Tech Tree Blog"
