@@ -11,27 +11,13 @@ allow_comments = true
 
 * GitHub Repository: [picocss/pico](https://github.com/picocss/pico)
 * License: [MIT](https://github.com/picocss/pico/blob/master/LICENSE.md)
-* Current Version: [v1.5.6](https://github.com/picocss/pico/releases/tag/v1.5.6) - Released 2022-10-03
+* Current Version: [v1.5.7](https://github.com/picocss/pico/releases/tag/v1.5.7) - Released 2023-01-28
 * Primary folder: [scss](https://github.com/picocss/pico/tree/master/scss)
 
-## My Changes
-
-
-
-### Top-level Files
-* `_functions.scss`: No Changes
-* `_variables.scss`: 
-* `pico.classless.scss`: 
-* `pico.fluid.classless.scss`: 
-* `pico.slim.scss`: 
-* `pico.scss`: 
-
-### Components Folder
-
-### Content Folder
-
-### Layout Folder
-
-### Themes Folder
-
-### Utility Folder
+## My Extensions
+* Location: <https://github.com/SurajSSingh/Site/blob/main/sass/extra/_misc.scss>
+* Changes:
+    * Add label for code block using `data-lang` attribute
+    * Add highlighting hover for table body
+    * Root footer will have text be centered
+    * Create Table Of Content styling via aside, nav, details + summary, and ol + li

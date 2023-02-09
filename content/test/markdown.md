@@ -1,44 +1,60 @@
 +++
 title = "Markdown Test"
 date = 2022-12-29
-updated = 2023-02-01
+updated = 2023-02-07
+draft=true
 
 [extra]
 allow_comments = true
 render_mermaid = true
 +++
-# Heading 1 with \#
+# Markdown Test
 
-Heading 1 with underline
-=========================
+> **NOTE:**  
+> *This only focuses on content items, see these other pages for other Markdown/HTML/CSS testing:*
+> - [Heading](@/test/heading.md)
+> - [Color](@/test/colors.md)
+> - [Forms](@/test/form.md)
 
-## Heading 2 with \#
+---
+[^thematic-break]
 
-Heading 2 with underline
-------------------------
+This is a paragraph, just regular text with no more than 3 indentation. 
 
-### Heading 3
-#### Heading 4
-##### Heading 5
-###### Heading 6
-
-
-This is a paragraph
+Paragraph ends with 2+ newlines or two spaces after.
 
 > This is a
 > block quote
 
 `This is an inline code`
 
+        First line (more indented)
+            blank line before not included
+    This is an 
+        indented 
+        code 
+        block
+    using either spaces or tabs 
+        minimum 4 required
+            preceding spaces removed
+            but interior spaces kept
+    blank line after not included
+
 ```
 This is a
-fenced
-code 
-block
+    fenced
+    code 
+    block
+using "`" (backtick)
+blank line before and after not required
 ```
----
-Hyphens for horizontal lines
-
+~~~
+This is a
+    fenced
+    code 
+    block
+using "~" (tilde)
+~~~
 * List Item using asterisk
 + List Item using plus sign
 - List Item using hyphen
@@ -51,9 +67,6 @@ Hyphens for horizontal lines
 [Referenced Link with explicit name][Note1]
 [Referenced Link with implicit name][]
 
-___ 
-Underscore for horizontal line
-
 Here's a sentence with a footnote. [^1]
 
 *single asterisks*
@@ -63,6 +76,9 @@ _single underscores_
 **double asterisks**
 
 __double underscores__
+
+___ 
+[^thematic-break]
 
 ~~Two tildes.~~
 
@@ -79,10 +95,10 @@ __double underscores__
 [Note1]: https://youtube.com "Youtube"
 [referenced link with implicit name]: https://youtube.com "Youtube Again"
 
-***
-Asterisk for horizontal lines
 
-# Extra stuff (rendered when needed)
+
+***
+[^thematic-break]
 
 ```mermaid
 ---

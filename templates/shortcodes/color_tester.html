@@ -1,0 +1,18 @@
+{% for theme in themes | default(value=["dark", "light"]) %}
+<div data-theme="{{theme}}">
+    Color Theme = {{theme}}:
+    {% for bg in colors %}
+    <div style="border: 4px solid var(--{{bg}});">
+        {{bg}} Color:
+        <div style="background: var(--{{bg}});min-height: {{height | default(value='64px')}}">
+            |
+            {% for tc in colors %}
+            {% if bg != tc %}
+            <span style="color: var(--{{tc}});border: 2px solid var(--{{tc}});">{{tc}} tx on {{bg}} bg</span> |
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
