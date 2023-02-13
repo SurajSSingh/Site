@@ -4,4 +4,4 @@ date=2023-02-07
 draft=true
 +++
 
-This page is only to test certain capabilities of the website.
+This page is only to test certain capabilities of the website. All pages should be have set `draft` variable to true. This should not appear on the actual website, but should still be part of the repository (mostly for my sake).

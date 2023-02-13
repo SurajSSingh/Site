@@ -8,7 +8,6 @@ draft=true
 allow_comments = true
 render_mermaid = true
 +++
-# Markdown Test
 
 > **NOTE:**  
 > *This only focuses on content items, see these other pages for other Markdown/HTML/CSS testing:*
@@ -55,6 +54,18 @@ This is a
     block
 using "~" (tilde)
 ~~~
+
+~~~python
+# This is python syntax highlighting
+class A:
+    def hello(a: int) -> string:
+        print("he" + "ll" * a + "o" * a * 1.5)
+
+a = A()
+
+a.hello()
+~~~
+
 * List Item using asterisk
 + List Item using plus sign
 - List Item using hyphen
@@ -128,5 +139,7 @@ classDiagram
         +run()
     }
 ```
+
+[^thematic-break]: This is a horizontal line.
 
 [^1]: This is the footnote.
