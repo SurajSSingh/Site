@@ -1,0 +1,65 @@
+<!-- 
+    * info_obj: HashMap<String, Any> = object for creating definition list
+    * info_arr: Array<Any> = array for creating definition list
+    * ignored_keys: Array<String> = both keys and values ignored
+    * ignored_value: Array<String> = key shown but value is ignored
+    * replaced_ignored_value: String = the string to replace value when ignored
+--->
+
+{% macro info_definition_list_object(info_obj, ignored_keys=false, ignored_values=false, replaced_ignored_value="IGNORED",
+default_value="EMPTY VALUE", empty_object_text="EMPTY OBJECT", empty_array_text="EMPTY ARRAY")%}
+{% for key, value in info_obj %}
+<dl>
+    {% if not ignored_keys or key not in ignored_keys %}
+    <dt>
+        {{key}}
+    </dt>
+    <dd>
+        {% if ignored_values and key in ignored_values %}
+        {{replaced_ignored_value}}
+        {# Object #}
+        {% elif value is object %}
+        {{self::info_definition_list_object(info_obj=value, ignored_keys=ignored_keys, ignored_values=ignored_values,
+        replaced_ignored_value=replaced_ignored_value, default_value=default_value,
+        empty_object_text=empty_object_text,empty_array_text=empty_array_text)}}
+        {# Array #}
+        {% elif value is iterable %}
+        {{self::info_definition_list_array(info_arr=value,ignored_keys=ignored_keys, ignored_values=ignored_values,
+        replaced_ignored_value=replaced_ignored_value,
+        default_value=default_value,
+        empty_object_text=empty_object_text,empty_array_text=empty_array_text)}}
+        {# Other #}
+        {% else %}
+        {{value | default(value=default_value)}}
+        {% endif %}
+    </dd>
+    {% endif %}
+</dl>
+{% else %}
+{{empty_object_text}}
+{% endfor %}
+
+{% endmacro info_list_object %}
+
+{% macro info_definition_list_array(info_arr, ignored_keys=false, ignored_values=false, replaced_ignored_value="IGNORED",
+default_value="EMPTY VALUE", empty_object_text="EMPTY OBJECT", empty_array_text="EMPTY ARRAY") %}
+<ol>
+    {% for value in info_arr %}
+    <li>
+        {% if value is object %}
+        {{self::info_definition_list_object(info_obj=value,ignored_keys=ignored_keys, ignored_values=ignored_values,
+        replaced_ignored_value=replaced_ignored_value,
+        default_value=default_value, empty_object_text=empty_object_text,empty_array_text=empty_array_text)}}
+        {% elif value is iterable %}
+        {{self::info_definition_list_array(info_arr=value,ignored_keys=ignored_keys, ignored_values=ignored_values,
+        replaced_ignored_value=replaced_ignored_value,
+        default_value=default_value, empty_object_text=empty_object_text,empty_array_text=empty_array_text)}}
+        {% else %}
+        {{value | default(value=default_value)}}
+        {% endif %}
+        {% else %}
+        {{empty_array_text}}
+    </li>
+    {% endfor %}
+</ol>
+{% endmacro page_info_list_array %}

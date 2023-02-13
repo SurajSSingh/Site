@@ -22,38 +22,40 @@
 {% macro feather_svg_direct(link, name, rel_link, placement="top", class="", stroke="currentColor")%}
 {% include "shortcodes/feather_svg.html" %}
 {% endmacro feather_svg %}
+
 {% macro article_card(info)%}
 <article>
     <header>
         <hgroup>
             <a href="{{ info.permalink | safe }}">
                 <h1>{{ info.title }}</h1>
+                {% if info.description %}
                 <p>{{info.description}}</p>
-            </a>
-            {% set latest_date = [] %}
-            {% if info.subsections %}
-            {% set latest_date = latest_date | concat(with=info.subsections | map(attribute="date")) |
-            concat(with=info.subsections |
-            map(attribute="updated")) %}
-            {% endif %}
-            {% if info.pages %}
-            {% set latest_date = latest_date | concat(with=info.pages | map(attribute="date") | concat(with=info.pages |
-            map(attribute="updated"))) %}
-            {% endif %}
-            <p>
-                {% if latest_date %}
-                Latest Update: {{latest_date | sort | last}}
-                {% elif info.updated %}
-                Latest Update: {{info.updated }}
-                {% elif info.date %}
-                Latest Update: {{info.date }}
                 {% endif %}
-            </p>
+            </a>
         </hgroup>
+        {% set latest_date = [] %}
+        {% if info.subsections %}
+        {% set latest_date = latest_date | concat(with=info.subsections | map(attribute="date")) |
+        concat(with=info.subsections |
+        map(attribute="updated")) %}
+        {% endif %}
+        {% if info.pages %}
+        {% set latest_date = latest_date | concat(with=info.pages | map(attribute="date") | concat(with=info.pages |
+        map(attribute="updated"))) %}
+        {% endif %}
+        <p>
+            {% if latest_date %}
+            Latest Update: {{latest_date | sort | last}}
+            {% elif info.updated %}
+            Latest Update: {{info.updated }}
+            {% elif info.date %}
+            Latest Update: {{info.date }}
+            {% endif %}
+        </p>
     </header>
     {% if info.summary %}
     {{info.summary | safe}}
-    <a href="{{ info.permalink }}#continue-reading"><small> Continue Reading... </small></a>
     {% endif %}
     {% if info.subsections %}
     <details>
@@ -79,6 +81,11 @@
             {% endfor %}
         </ul>
     </details>
+    {% endif %}
+    {% if info.summary %}
+    <footer>
+        <a href="{{ info.permalink }}#continue-reading"><small> Continue Reading... </small></a>
+    </footer>
     {% endif %}
 </article>
 {% endmacro article_card %}

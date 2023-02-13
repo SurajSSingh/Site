@@ -1,0 +1,10 @@
+{% extends "layout/base.tera.html" %}
+
+
+{% block title %}
+{% if title %}
+{{ title ~ " | " ~ config.title}}
+{% else %}
+{{super()}}
+{% endif %}
+{% endblock title %}

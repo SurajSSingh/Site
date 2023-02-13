@@ -1,0 +1,22 @@
+{% import "macro/debug_macros.tera.html" as macros %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>TEST PAGE</title>
+        <link rel="stylesheet" href="{{config.base_url}}pico.fluid.classless.css">
+        <style>
+            dt::after {
+                content: ": ";
+            }
+        </style>
+    </head>
+
+    <body>
+        {{macros::info_definition_list_object(info_obj=page, ignored_values=["content"])}}
+    </body>
+
+</html>

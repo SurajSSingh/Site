@@ -1,3 +1,5 @@
+@import url("syntax-theme-dark.css") (prefers-color-scheme: dark);
+@import url("syntax-theme-light.css") (prefers-color-scheme: light);
 pre[data-lang]::before {
     background-color: var(--code-kbd-background-color);
     color: var(--code-kbd-color);
@@ -90,7 +92,7 @@ aside>nav {
             }
 
             &:focus {
-                outline: dotted var(--primary);
+                outline: groove var(--primary);
                 color: var(--accordion-active-summary-color);
             }
         }

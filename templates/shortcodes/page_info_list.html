@@ -1,0 +1,65 @@
+<dl>
+    {% for key, value in page %}
+    <dt>
+        {{key}}
+    </dt>
+    {% if key == "content" %}
+    {% if show_content | default(value=false) %}
+    <dd>{{value}}</dd>
+    {% else %}
+    <dd>CONTENT HIDDEN</dd>
+    {% endif %}
+    {# Object #}
+    {% elif value is object %}
+    <dd>
+        <dl>
+            {% for subkey, subval in value %}
+            <dt>{{subkey}}</dt>
+            <dd>{{subval | json_encode(pretty=true)}}</dd>
+            {% else %}
+            <p>EMPTY OBJECT</p>
+            {% endfor %}
+        </dl>
+    </dd>
+    {# Array #}
+    {% elif value is iterable %}
+    <dd>
+        <ol>
+            {% for subvalue in value %}
+            {# SubObject in Array #}
+            {% if subvalue is object %}
+            {% for skey, sval in subvalue %}
+            <dl>
+                <dt>{{key}}.{{skey}}</dt>
+                {% if sval is iterable %}
+                <ol>
+                    {% for s2val in sval %}
+                    <li>{{s2val}}</li>
+                    {% else %}
+                    <p>EMPTY ITERABLE</p>
+                    {% endfor %}
+                </ol>
+                {% else %}
+                <dl>{{sval}}</dl>
+                {% endif %}
+            </dl>
+            {# Empry Array #}
+            {% else %}
+            <p>EMPTY</p>
+            {% endfor %}
+            {% else %}
+            <li>{{subvalue}}</li>
+            {% endif %}
+            {% else %}
+            <p>EMPTY ARRAY</p>
+            {% endfor %}
+        </ol>
+    </dd>
+    {# Other #}
+    {% else %}
+    <dd>{{value | default(value="EMPTY VALUE")}}</dd>
+    {% endif %}
+    {% else %}
+    <p>EMPTY KEY</p>
+    {% endfor %}
+</dl>

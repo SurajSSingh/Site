@@ -1,0 +1,36 @@
+{% import "macro/macros.tera.html" as macros %}
+{% import "macro/debug_macros.tera.html" as debug_macros %}
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{{config.title}}{% endblock title %}</title>
+    <meta name="description" content="{% block description %}{{config.description}}{% endblock description %}">
+    {% block head_info %}
+    <link rel="stylesheet" href="{{config.base_url}}pico.fluid.classless.css">
+    {% endblock head_info %}
+  </head>
+
+  <body>
+    <header>
+      {% block header %}
+      {% include "includes/default/header.tera.html" %}
+      {% endblock %}
+    </header>
+    <main>
+      <article>
+        <aside id="topAside">{% block top_aside %} {% endblock %}</aside>
+        {% block content %} {% endblock %}
+        <aside id="bottomAside">{% block bottom_aside %} {% endblock %}</aside>
+      </article>
+    </main>
+    <footer>
+      {% block footer %}
+      {% include "includes/default/footer.tera.html" %}
+      {% endblock %}
+    </footer>
+  </body>
+
+</html>
