@@ -3,7 +3,7 @@ title = "Deno+Tauri+Svelte: How I got things setup"
 date = 2023-01-01
 updated = 2023-01-16
 
-[taxonomy]
+[taxonomies]
 programming-language = ["shell"]
 
 [extra]

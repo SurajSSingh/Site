@@ -3,6 +3,9 @@ title = "My Changes to PicoCSS"
 date = 2023-02-01
 updated = 2023-02-01
 
+[taxonomies]
+programming-language = ["shell"]
+
 [extra]
 allow_comments = true
 +++

@@ -191,6 +191,8 @@ include_content = true
 
 nav_sections = ["blog", "notes"]
 
+authors = "Suraj S. Singh"
+
 # Array of links to external website
 # Minimum requirement: 
 #   * name: string 

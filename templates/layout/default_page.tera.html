@@ -45,27 +45,32 @@
         {% set authors = page.extra.authors | default(value=config.extra.authors) %}
         <p>
             {% if authors is iterable %}
-            {{authors | join(sep=", ")}}
+            Authors: {{authors | join(sep=", ")}}
             {% else %}
-            {{authors}}
+            Author: {{authors}}
             {% endif %}
         </p>
         {% endif %}
         <p>
             {% if page.date %}
             {% if page.updated %}
-            First Created: {{ page.date }}
+            First Created: {{ page.date | date(timezone="America/Los_Angeles")}}
             {% else %}
-            <strong>First Created: {{ page.date }}</strong>
+            <strong>First Created: {{ page.date | date(timezone="America/Los_Angeles") }}</strong>
             {% endif %}
             {% endif %}
             <br />
             {% if page.updated %}
-            <strong>Latest Update: {{ page.updated }}</strong>
+            <strong>Latest Update: {{ page.updated | date(timezone="America/Los_Angeles") }}</strong>
             {% endif %}
         </p>
         <p>
             <em>License: {{ page.extra.license | default(value="CC BY-SA-NC") }}</em>
+        </p>
+        <p>
+            {% for taxon, value in page.taxonomies %}
+            {{taxon}} {{value}}
+            {% endfor %}
         </p>
     </details>
 </section>
