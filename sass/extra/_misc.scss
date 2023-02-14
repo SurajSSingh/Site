@@ -129,8 +129,58 @@ aside>nav {
     }
 }
 
-// @if map-get($breakpoints, "lg") {
-//     @media (min-width: map-get($breakpoints, "lg")) {
-//         aside+main {}
-//     }
+// Tags
+// Note: Below requires :has selector, which is not yet full supported by Firefox
+// dt:has(>[role="button"]),
+// dt:has(>button) {
 // }
+// dd>[role="button"],
+// dd>button {
+// }
+
+// Tag alternative
+
+
+dl[aria-label="taglist"]>dt {
+    display: inline;
+    margin: 0;
+    padding: var(--form-element-spacing-vertical) var(--form-element-spacing-horizontal);
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+    outline: none;
+    background-color: var(--secondary-focus);
+    box-shadow: var(--box-shadow);
+    color: var(--color);
+    font-weight: var(--font-weight);
+    font-size: 1rem;
+    line-height: var(--line-height);
+    text-align: center;
+    cursor: pointer;
+}
+
+dl[aria-label="taglist"]>dt+dt {
+    border-radius: 0;
+    border-left: 2px solid var(--primary);
+}
+
+dl[aria-label="taglist"]>dd {
+    display: inline;
+    margin: 0;
+    padding: var(--form-element-spacing-vertical) var(--form-element-spacing-horizontal);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 0;
+    border-right: 2px solid var(--primary);
+    outline: none;
+    background-color: var(--secondary);
+    box-shadow: var(--box-shadow);
+    color: var(--color);
+    font-weight: var(--font-weight);
+    font-size: 1rem;
+    line-height: var(--line-height);
+    text-align: center;
+    cursor: pointer;
+}
+
+dl[aria-label="taglist"]>dd:last-of-type {
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    border-right: 0 solid var(--primary);
+}

@@ -4,7 +4,7 @@ date = 2023-02-01
 updated = 2023-02-01
 
 [taxonomies]
-programming-language = ["shell"]
+programming-language = ["scss"]
 
 [extra]
 allow_comments = true
@@ -24,3 +24,4 @@ allow_comments = true
     * Add highlighting hover for table body
     * Root footer will have text be centered
     * Create Table Of Content styling via aside, nav, details + summary, and ol + li
+    * Tag using Definition List

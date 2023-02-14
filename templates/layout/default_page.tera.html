@@ -67,11 +67,27 @@
         <p>
             <em>License: {{ page.extra.license | default(value="CC BY-SA-NC") }}</em>
         </p>
-        <p>
-            {% for taxon, value in page.taxonomies %}
-            {{taxon}} {{value}}
+        <dl aria-label="taglist">
+            {% for taxon_key, taxon_val in page.taxonomies %}
+            {% set taxon = get_taxonomy(kind=taxon_key) %}
+            <dt>
+                <a href="{{taxon.permalink}}">
+                    {{taxon_key}}
+                </a>
+            </dt>
+            {% if taxon_val is iterable %}
+            {% for value in taxon_val %}
+            <dd>
+                <a href="{{get_taxonomy_url(kind=taxon_key,name=value)}}">{{value}}</a>
+            </dd>
             {% endfor %}
-        </p>
+            {% else %}
+            <dd>
+                <a href="{{get_taxonomy_url(kind=taxon_key,name=taxon_val)}}">{{taxon_val}}</a>
+            </dd>
+            {% endif %}
+            {% endfor %}
+                </dl>
     </details>
 </section>
 
