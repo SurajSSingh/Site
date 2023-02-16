@@ -18,7 +18,7 @@ tbody tr:hover {
     text-align: center
 }
 // Table of content
-article>header {
+*[aria-label="table-of-content"] {
 
     // When on large screen, table of content can appear on left side of screen
     // @if map-get($breakpoints, "lg") {
@@ -30,20 +30,32 @@ article>header {
     padding: var(--spacing);
     margin-bottom: var(--spacing);
     border-bottom: var(--border-width) solid var(--accordion-border-color);
+    display: block;
 
     details {
         border-bottom: 0px solid red;
 
-        a {
-            display: inline;
+        a::after {
+                // content: "•";
         }
 
         &>ol {
             padding: 0 var(--spacing);
-            list-style: none;
 
             li {
                 margin: 0 calc(var(--nav-element-spacing-horizontal) * 3);
+                padding: var(--form-element-spacing-vertical) var(--nav-element-spacing-horizontal);
+                    display: block;
+                
+                    &>a::after {
+                        content: " ";
+                        width: calc(var(--nav-element-spacing-horizontal) * 2);
+                        height: 1rem;
+                        // background-image: var(--icon-chevron-button);
+                        float: left;
+                    }
+                
+                    ;
             }
         }
 
@@ -184,4 +196,9 @@ dl[aria-label="taglist"]>dd {
 dl[aria-label="taglist"]>dd:last-of-type {
     border-radius: 0 var(--border-radius) var(--border-radius) 0;
     border-right: 0 solid var(--primary);
+}
+// Anchor Before Link image
+
+.zola-anchor::before {
+    content: url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>');
 }

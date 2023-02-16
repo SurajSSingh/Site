@@ -5,9 +5,8 @@
 {{ super() }}
 {% endblock title %}
 
-
-{% block content %}
-
+{% block precontent %}
+<header>
 <hgroup>
     <a href="#">
         <h1>
@@ -18,6 +17,10 @@
         {{section.description}}
     </p>
 </hgroup>
+</header>
+{% endblock precontent %}
+
+{% block content %}
 
 {{section.content | safe}}
 
