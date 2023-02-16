@@ -5,7 +5,9 @@
             placement="right", stroke="var(--primary)")}}
         </li>
     </ul>
-    {# <input type="search" name="" id=""> #}
+    {% if page.extra.include_search or section.extra.include_search | default(value=false) %}
+    <input type="search" name="" id="">
+    {% endif %}
     {% if config.extra.nav_sections %}
     <ul>
         {% for section_name in config.extra.nav_sections %}

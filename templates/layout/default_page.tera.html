@@ -13,9 +13,16 @@
 {% if page.extra.footnote_backlink | default(value=true) %}
 {% include "includes/scripts/footnote.tera.html" %}
 {% endif %}
+{% include "includes/scripts/copy_to_clipboard.tera.html" %}
+{% if page.extra.include_progress | default(value=false) %}
+{% include "includes/scripts/progress.tera.html" %}
+{% endif %}
 {% endblock head_info %}
 
 {% block precontent %}
+{% if page.extra.include_progress | default(value=false) %}
+<progress id="reading-progress" max="100" value="0"></progress>
+{% endif %}
 <header id="top-aside">
 {% if page.extra.include_toc | default(value=true) %}
 {% include "includes/page/toc.tera.html" %}
@@ -23,8 +30,8 @@
 {{ super() }}
 {% if page.title %}
 <hgroup>
-    <a href="#">
-        <h1 id="#">
+    <a href="#maincontent">
+        <h1>
             {{ page.title }}
         </h1>
     </a>
@@ -47,6 +54,9 @@
             {% endif %}
         </p>
         {% endif %}
+        {% if page.word_count > 0 %}
+        <p>Word Count: {{page.word_count}} word{{page.word_count | pluralize}}</p>
+        {% endif %}
         <p>
             {% if page.date %}
             {% if page.updated %}
@@ -64,6 +74,7 @@
             <em>License: {{ page.extra.license | default(value="CC BY-SA-NC") }}</em>
         </p>
         <p>
+        {% if page.taxonomies and page.taxonomies | length > 0%}
             Tags: <br />
         <dl aria-label="taglist">
             {% for taxon_key, taxon_val in page.taxonomies %}
@@ -86,14 +97,16 @@
             {% endif %}
             {% endfor %}
         </dl>
+        {% endif %}
         </p>
     </details>
 </header>
 {% endblock %}
 
 {% block content %}
-
+<section id="content">
 {{ page.content | safe }}
+</section>
 
 {% endblock content %}
 

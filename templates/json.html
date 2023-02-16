@@ -1,0 +1,4 @@
+{% import "macro/macros.tera.html" as macros %}
+[
+{{- macros::build_search_index(section_paths=["notes/_index.md","blog/_index.md"]) -}}
+]
