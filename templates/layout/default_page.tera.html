@@ -16,7 +16,7 @@
 {% endblock head_info %}
 
 {% block precontent %}
-<aside id="top-aside">
+<header id="top-aside">
 {% if page.extra.include_toc | default(value=true) %}
 {% include "includes/page/toc.tera.html" %}
 {% endif %}
@@ -88,7 +88,7 @@
         </dl>
         </p>
     </details>
-</aside>
+</header>
 {% endblock %}
 
 {% block content %}

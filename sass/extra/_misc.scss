@@ -18,7 +18,7 @@ tbody tr:hover {
     text-align: center
 }
 // Table of content
-aside>nav {
+article>header {
 
     // When on large screen, table of content can appear on left side of screen
     // @if map-get($breakpoints, "lg") {
@@ -40,6 +40,7 @@ aside>nav {
 
         &>ol {
             padding: 0 var(--spacing);
+            list-style: none;
 
             li {
                 margin: 0 calc(var(--nav-element-spacing-horizontal) * 3);
