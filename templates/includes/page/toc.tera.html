@@ -4,8 +4,15 @@
         <summary>Table Of Contents</summary>
         <ol>
             <li>
-                {{macros::accordion(label=page.title, link=page.permalink ~ '#', level=1, children=page.toc)}}
+            {% set children = page.toc %}
+            
+            {{macros::accordion(label=page.title, link=page.permalink ~ '#', level=1, children=children)}}
             </li>
+            {% if page.extra.include_toc | default(value=true) %}
+            <li>
+                <a href="#giscus-comments">Comment Section</a>
+            </li>
+            {% endif %}
         </ol>
         </details>
 </nav>

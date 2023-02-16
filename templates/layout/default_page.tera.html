@@ -15,15 +15,12 @@
 {% endif %}
 {% endblock head_info %}
 
-{% block top_aside %}
-{{ super() }}
+{% block precontent %}
+<aside id="top-aside">
 {% if page.extra.include_toc | default(value=true) %}
 {% include "includes/page/toc.tera.html" %}
 {% endif %}
-{% endblock %}
-
-{% block content %}
-
+{{ super() }}
 {% if page.title %}
 <hgroup>
     <a href="#">
@@ -38,7 +35,6 @@
 {% else %}
 <h1>Unknown Page</h1>
 {% endif %}
-<section>
     <details>
         <summary>Page Details</summary>
         {% if page.extra.authors or config.extra.authors %}
@@ -67,6 +63,8 @@
         <p>
             <em>License: {{ page.extra.license | default(value="CC BY-SA-NC") }}</em>
         </p>
+        <p>
+            Tags: <br />
         <dl aria-label="taglist">
             {% for taxon_key, taxon_val in page.taxonomies %}
             {% set taxon = get_taxonomy(kind=taxon_key) %}
@@ -87,17 +85,23 @@
             </dd>
             {% endif %}
             {% endfor %}
-                </dl>
+        </dl>
+        </p>
     </details>
-</section>
+</aside>
+{% endblock %}
+
+{% block content %}
 
 {{ page.content | safe }}
 
 {% endblock content %}
 
-{% block bottom_aside %}
+{% block postcontent %}
+<footer id="bottom-aside">
 {{ super() }}
 {% if page.extra.allow_comments %}
 {% include "includes/page/giscus_comments.tera.html" %}
 {% endif %}
+</footer>
 {% endblock %}

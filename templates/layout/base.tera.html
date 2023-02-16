@@ -21,9 +21,9 @@
     </header>
     <main>
       <article>
-        <aside id="topAside">{% block top_aside %} {% endblock %}</aside>
+        {% block precontent %} {% endblock %}
         {% block content %} {% endblock %}
-        <aside id="bottomAside">{% block bottom_aside %} {% endblock %}</aside>
+        {% block postcontent %} {% endblock %}
       </article>
     </main>
     <footer>
