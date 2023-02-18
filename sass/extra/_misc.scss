@@ -36,9 +36,6 @@ tbody tr:hover {
     details {
         border-bottom: 0px solid red;
 
-        a::after {
-                // content: "•";
-        }
 
         &>ol {
             padding: 0 var(--spacing);

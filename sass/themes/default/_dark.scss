@@ -36,8 +36,8 @@
   --contrast-inverse: #{$black};
 
   // Highlighted text (<mark>)
-  --mark-background-color: #{mix($grey-300, $amber-300)};
-  --mark-color: #{mix($black, $grey-900, 37.5%)};
+  --mark-background-color: #{mix($grey-300, $primary-300)};
+  --mark-color: #{mix($black, $primary-900, 37.5%)};
 
   // Inserted (<ins>) & Deleted (<ins>)
   --ins-color: #{$green-700};
@@ -89,7 +89,7 @@
   --table-row-stripped-background-color: #{rgba($grey-500, 0.05)};
 
   // Code
-  --code-background-color: #{mix($black, $grey-900, 12.5%)};
+  --code-background-color: #{mix($black, $primary-900, 12.5%)};
   --code-color: var(--primary-color);
   --code-kbd-background-color: var(--contrast);
   --code-kbd-color: var(--contrast-inverse);

@@ -39,9 +39,9 @@ hard_link_static = false
 #       {name = "authors"}, # Basic definition: no feed or pagination
 #     ]
 #
-[[taxonomies]]
-name = "programming-language"
-feed = true
+taxonomies =[
+    {name = "programming-language", feed = true}   
+]
 
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = true
@@ -144,6 +144,10 @@ include_content = true
 # become too big to load on the site. Defaults to not being set.
 # truncate_content_length = 100
 
+
+# Wether to produce the search index as a javascript file or as a JSON file
+# Accepted value "elasticlunr_javascript" or "elasticlunr_json"
+index_format = "elasticlunr_json"
 
 ############ TRANSLATION SETTINGS ############
 [translations]
