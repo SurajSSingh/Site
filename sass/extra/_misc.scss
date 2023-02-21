@@ -38,17 +38,17 @@ tbody tr:hover {
     // When on large screen, table of content can appear on right side of screen
     @if map-get($breakpoints, "lg") {
         @media (min-width: map-get($breakpoints, "lg")) {
-        position: sticky;
-        top: var(--spacing);
-        align-self: start;
-        float: right;
-        border-bottom: 0px solid var(--accordion-border-color);
+            position: sticky;
+            top: var(--spacing);
+            float: inline-end;
+            border-bottom: 0px solid var(--accordion-border-color);
         }
     }
 
     details {
         border-bottom: 0px solid red;
-
+        background-color: var(--background-color);
+        opacity: 0.9;
 
         &>ol {
             padding: 0 var(--spacing);
