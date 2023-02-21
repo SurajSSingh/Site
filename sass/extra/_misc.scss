@@ -10,6 +10,16 @@ pre[data-lang]::before {
     font-variant: small-caps;
 }
 
+// Smooth Scroll if not reduced motion
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion) {
+    html {
+        scroll-behavior: auto;
+    }
+}
 // Cell Highlight on hover
 tbody tr:hover {
     background-color: var(--primary-focus);
@@ -21,17 +31,20 @@ tbody tr:hover {
 // Table of content
 *[aria-label="table-of-content"] {
 
-    // When on large screen, table of content can appear on left side of screen
-    // @if map-get($breakpoints, "lg") {
-    //     @media (min-width: map-get($breakpoints, "lg")) {
-    //         float: left;
-    //     }
-    // }
-
     padding: var(--spacing);
     margin-bottom: var(--spacing);
     border-bottom: var(--border-width) solid var(--accordion-border-color);
     display: block;
+    // When on large screen, table of content can appear on right side of screen
+    @if map-get($breakpoints, "lg") {
+        @media (min-width: map-get($breakpoints, "lg")) {
+        position: sticky;
+        top: var(--spacing);
+        align-self: start;
+        float: right;
+        border-bottom: 0px solid var(--accordion-border-color);
+        }
+    }
 
     details {
         border-bottom: 0px solid red;
@@ -110,6 +123,7 @@ tbody tr:hover {
 
         // Open
         &[open] {
+            background-color: var(--background-color);
             >summary {
                 margin-bottom: calc(var(--spacing));
 
@@ -252,3 +266,8 @@ dl[aria-label="taglist"]>dd:last-of-type {
 //     /* For IE10 */
 //     color: var(--primary);
 //   }
+// Nested Lists
+
+ul li ul li {
+    list-style: disc;
+}

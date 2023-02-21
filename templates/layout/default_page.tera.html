@@ -23,10 +23,7 @@
 {% if page.extra.include_progress | default(value=false) %}
 <progress id="reading-progress" max="100" value="0"></progress>
 {% endif %}
-<header id="top-aside">
-{% if page.extra.include_toc | default(value=true) %}
-{% include "includes/page/toc.tera.html" %}
-{% endif %}
+<header>
 {{ super() }}
 {% if page.title %}
 <hgroup>
@@ -71,7 +68,19 @@
             {% endif %}
         </p>
         <p>
-            <em>License: {{ page.extra.license | default(value="CC BY-SA-NC") }}</em>
+            <em>License:
+                {% if page.extra.license %}
+                {% set license = page.extra.licnese %}
+                {% if license is string %}
+                {{license}}
+                {% elif page.extra.license is object %}
+                {# FIX ME: Destructure license #}
+                {% endif %}
+                {% else %}
+                <a href='https://creativecommons.org/licenses/by-nc-sa/4.0/'><abbr
+                        title='Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International'>CC BY-NC-SA 4.0<abbr></a>
+                {% endif %}
+            </em>
         </p>
         <p>
         {% if page.taxonomies and page.taxonomies | length > 0%}
@@ -104,6 +113,9 @@
 {% endblock %}
 
 {% block content %}
+{% if page.extra.include_toc | default(value=true) %}
+{% include "includes/page/toc.tera.html" %}
+{% endif %}
 <section id="content">
 {{ page.content | safe }}
 </section>
