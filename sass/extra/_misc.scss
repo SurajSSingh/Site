@@ -41,6 +41,7 @@ tbody tr:hover {
             position: sticky;
             top: var(--spacing);
             float: inline-end;
+            border-radius: var(--border-radius);
             border-bottom: 0px solid var(--accordion-border-color);
         }
     }
@@ -150,6 +151,13 @@ tbody tr:hover {
                     background-position: left center;
                 }
             }
+        }
+    }
+    &>details {
+        padding-top: var(--spacing);
+        &[open]{
+            height: auto;
+            overflow: scroll;
         }
     }
 }
@@ -271,3 +279,30 @@ dl[aria-label="taglist"]>dd:last-of-type {
 ul li ul li {
     list-style: disc;
 }
+// Detail focus
+details>summary:focus {
+    outline: solid var(--primary);
+}
+
+// Figure Caption
+figcaption {
+    text-align: center;
+}
+
+// SVG Image with filter inverse
+@media (prefers-color-scheme: dark){
+    .dark-invert{
+        filter: invert(1);
+    }
+}
+
+// Aside Cutout
+// aside {
+//     width: 40%;
+//     padding-left: 0.5rem;
+//     margin-left: 0.5rem;
+//     float: right;
+//     box-shadow: inset 5px 0 5px -5px var(--primary-focus);
+//     font-style: italic;
+//     color: var(--muted-color);
+// }

@@ -1,0 +1,36 @@
+{% set figure_id = "" %}
+{% set caption_prefix = "" %}
+{% if id %}
+{% set caption_prefix = "<strong>" %}
+    {% if id is number %}
+    {% set figure_id = "id='fig-" ~ id ~ "'" %}
+    {% set caption_prefix = "Figure " ~ id ~ ": " %}
+    {% else %}
+    {% set figure_id = "id='" ~ id ~ "'" %}
+    {% set caption_prefix = "Figure (" ~ id ~ "): " %}
+    {% endif %}
+    {% set caption_prefix = caption_prefix ~ " </strong>" %}
+{% endif%}
+
+{% set caption = caption | default(value="")%}
+{% if md_inline_cap is defined %}
+{% set caption = caption | markdown(inline=md_inline_cap) | safe %}
+{%endif %}
+
+{% set is_top_cap = is_top_cap | default(value=false)%}
+{% set id = id | default(value=false)%}
+{% set html_caption = "<figcaption " ~ figure_id ~ ">" ~ caption_prefix ~ caption ~ "</figcaption>"%}
+
+<figure>
+    {% if caption and is_top_cap %}
+    {{html_caption | safe}}
+    {% endif %}
+    {% if md_inline_body is defined %}
+    {{body | markdown(inline=md_inline_body) | safe}}
+    {% else %}
+    {{body}}
+    {% endif %}
+    {% if caption and not is_top_cap %}
+    {{html_caption | safe}}
+    {% endif %}
+</figure>

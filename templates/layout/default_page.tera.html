@@ -1,5 +1,9 @@
 {% extends "layout/default_common.tera.html" %}
 
+{% block variables %}
+{% set allow_comments = page.extra.allow_comments | default(value=false) %}
+{% endblock variables %}
+
 {% block title %}
 {% set title = page.title %}
 {{ super() }}
@@ -41,7 +45,7 @@
 {% endif %}
     <details>
         <summary>Page Details</summary>
-        {% if page.extra.authors or config.extra.authors %}
+        {% if page.authors or config.extra.authors %}
         {% set authors = page.extra.authors | default(value=config.extra.authors) %}
         <p>
             {% if authors is iterable %}
@@ -125,7 +129,7 @@
 {% block postcontent %}
 <footer id="bottom-aside">
 {{ super() }}
-{% if page.extra.allow_comments %}
+{% if allow_comments %}
 {% include "includes/page/giscus_comments.tera.html" %}
 {% endif %}
 </footer>

@@ -2,18 +2,19 @@
 <nav aria-label="table-of-content">
     <details>
         <summary>Table Of Contents</summary>
+        <details open>
+        <summary><a href="{{page.permalink ~ '#'}}">{{page.title}}</a></summary>
         <ol>
-            <li>
-            {% set children = page.toc %}
-            
-            {{macros::accordion(label=page.title, link=page.permalink ~ '#', level=1, children=children)}}
-            </li>
-            {% if page.extra.include_toc | default(value=true) %}
-            <li>
-                <a href="#giscus-comments">Comment Section</a>
-            </li>
+            {% for h2_child in page.toc %}
+                <li>
+                    {{macros::accordion(label=h2_child.title, link=h2_child.permalink, level=2, children=h2_child.children)}}
+                    </li>
+            {% endfor %}
+            {% if allow_comments %}
+            <li> <a href="#comments">Comments</a></li>
             {% endif %}
         </ol>
+        </details>
         </details>
 </nav>
 {% endif %}

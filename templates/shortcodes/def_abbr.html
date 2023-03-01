@@ -1,0 +1,9 @@
+{%if p | default(value=false) %}
+<p>
+    {%endif%}
+    <dfn {% if id %} id={{id}} {% endif %}>{{long}} ({{prefix_message |
+        default(value="")}}<abbr title="{{long}}">{{short}}</abbr>)</dfn>
+    {{body | markdown(inline=true) | safe}}
+    {%if p | default(value=false) %}
+</p>
+{%endif%}
