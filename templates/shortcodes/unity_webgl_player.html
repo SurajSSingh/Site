@@ -1,0 +1,14 @@
+<article>
+    <header><button onclick="let g = document.getElementById('gameIFrame'); g.setAttribute('src', g.getAttribute('data-src'))">
+            Click to load game.
+        </button>
+        <noscript>
+            JavaScript is not active, cannot load game.
+        </noscript>
+    </header>
+    <div style="display:flex;justify-content:center;">
+        <iframe id="gameIFrame" allowtransparency="true" loading="lazy" frameborder="0" data-src={{game_src |
+            default(value="game.html" )}} allowfullscreen="" width="{{width | default(value=640)}}"
+            height="{{height | default(value=380)}}"></iframe>
+    </div>
+</article>
