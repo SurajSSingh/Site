@@ -1,0 +1,45 @@
+<section class="grid">
+    {% if page.lower %}
+    <article>
+        <a href="{{page.lower.permalink}}">
+            <p>
+                <strong>{{page.lower.title}}</strong>
+                <br />
+                <small>{{page.lower.description}}</small>
+                <br />
+                <em>
+                    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <use href='{{config.base_url}}feather-sprite.svg#arrow-left' />
+                    </svg>
+                    Previous
+                </em>
+            </p>
+        </a>
+    </article>
+    {% else %}
+    <div></div>
+    {% endif %}
+    <div></div>
+    {% if page.higher %}
+    <article>
+        <a href="{{page.higher.permalink}}">
+            <p>
+                <strong>{{page.higher.title}}</strong>
+                <br />
+                <small>{{page.higher.description}}</small>
+                <br />
+                <em>
+                    Next
+                    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <use href='{{config.base_url}}feather-sprite.svg#arrow-right' />
+                    </svg>
+                </em>
+            </p>
+        </a>
+    </article>
+    {% else %}
+    <div></div>
+    {% endif %}
+</section>
