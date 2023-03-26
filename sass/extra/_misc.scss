@@ -220,7 +220,7 @@ dl[aria-label="taglist"]>dd:last-of-type {
 // Anchor Before Link image
 
 .zola-anchor::before {
-    content: url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>');
+    content: url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="limegreen" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>');
     padding-right: calc(var(--nav-element-spacing-horizontal) * 2);
 }
 
@@ -296,6 +296,23 @@ figcaption {
     }
 }
 
+.grid {
+    grid-column-gap: var(--grid-spacing-horizontal);
+    grid-row-gap: var(--grid-spacing-vertical);
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 0;
+
+    @if map-get($breakpoints, "lg") {
+        @media (min-width: map-get($breakpoints, "lg")) {
+            grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
+        }
+    }
+
+    &>* {
+        min-width: 0; // HACK for childs in overflow
+    }
+}
 // Aside Cutout
 // aside {
 //     width: 40%;

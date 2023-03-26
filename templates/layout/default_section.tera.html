@@ -25,15 +25,14 @@
 {{section.content | safe}}
 
 <!-- If you are using pagination, section.pages will be empty. You need to use the paginator object -->
-<div class="grid">
-    <hr />
-    {% for subsect in section.subsections %}
-    {{macros::article_card(info=get_section(path=subsect))}}
-    <hr />
-    {% endfor %}
-    {% for page in section.pages %}
-    {{macros::article_card(info=page)}}
-    <hr />
-    {% endfor %}
-</div>
+<hr />
+{% for subsect in section.subsections %}
+{{macros::article_card(info=get_section(path=subsect))}}
+<hr />
+{% endfor %}
+{% for page in section.pages %}
+{{macros::article_card(info=page)}}
+<hr />
+{% endfor %}
+
 {% endblock content %}
