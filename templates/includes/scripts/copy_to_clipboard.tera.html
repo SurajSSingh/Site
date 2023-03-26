@@ -30,7 +30,7 @@
 
     async function copyCode(block, button) {
         let code = block.querySelector("code");
-        let text = code.innerHTML;
+        let text = code.innerHTML.replaceAll(/<span .*?>/g, "").replaceAll("</span>", "").replaceAll("&lt;", "<").replaceAll("&gt;", ">");
 
         await navigator.clipboard.writeText(text);
 
