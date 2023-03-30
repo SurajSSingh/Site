@@ -22,6 +22,12 @@
 {% if page.extra.include_progress | default(value=false) %}
 {% include "includes/scripts/progress.tera.html" %}
 {% endif %}
+{% if page.extra.use_mathjax | default(value=false) %}
+{% include "includes/page/mathjax.tera.html" %}
+{% endif %}
+{% if page.extra.use_katex | default(value=false) %}
+{% include "includes/page/katex.tera.html" %}
+{% endif %}
 {% endblock head_info %}
 
 {% block precontent %}
