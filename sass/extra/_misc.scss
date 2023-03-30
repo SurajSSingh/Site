@@ -323,3 +323,19 @@ figcaption {
 //     font-style: italic;
 //     color: var(--muted-color);
 // }
+// Code Table
+pre code td {
+    border-bottom: 0;
+    padding: 0%;
+}
+
+pre code td mark {
+    display: block;
+    background-color: var(--primary-focus);
+    color: var(--primary-inverse);
+}
+
+// Aria-hidden
+[aria-hidden="true"] {
+    display: none;
+}
