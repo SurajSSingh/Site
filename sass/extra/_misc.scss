@@ -40,6 +40,7 @@ tbody tr:hover {
         @media (min-width: map-get($breakpoints, "lg")) {
             position: sticky;
             top: var(--spacing);
+            float: right;
             float: inline-end;
             border-radius: var(--border-radius);
             border-bottom: 0px solid var(--accordion-border-color);
@@ -156,8 +157,8 @@ tbody tr:hover {
     &>details {
         padding-top: var(--spacing);
         &[open]{
-            height: auto;
-            overflow: scroll;
+            max-height: 90vh;
+            overflow-y: scroll;
         }
     }
 }
