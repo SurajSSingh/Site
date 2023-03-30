@@ -5,6 +5,14 @@
 {{ super() }}
 {% endblock title %}
 
+{% block description %}
+{% if section.description %}
+{{section.description}}
+{% else %}
+{{super()}}
+{% endif %}
+{% endblock description %}
+
 {% block precontent %}
 <header>
 <hgroup>

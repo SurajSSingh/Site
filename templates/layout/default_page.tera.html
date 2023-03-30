@@ -10,6 +10,14 @@
 {{ super() }}
 {% endblock title %}
 
+{% block description %}
+{% if page.description %}
+{{page.description}}
+{% else %}
+{{super()}}
+{% endif %}
+{% endblock description %}
+
 {% block head_info %}
 {{ super() }}
 {% if page.extra.render_mermaid | default(value=false) %}
