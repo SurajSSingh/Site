@@ -87,7 +87,7 @@ If you see my second iteration for the solution, I did *not* implement that, but
 
 The idea for this new sieve is to start with a range of natural numbers stepping by 1 and somehow remove factors of a given prime by skipping over them to produce a next new range. At each successive step, the range is refined to only include primes and composites that don't hold any previous primes as factors. 
 
-As an example, let's start with all the Natural numbers, which will be out first range (`range_0`). 
+As an example, let's start with all the Natural numbers, which will be our first range (`range_0`). 
 $$\mathbb{N} = range_0 = [0,1,2,3,4,5,6,7,8,9,10,\...]$$
 
 To begin the algorithm, we will remove $0$ and $1$. 
@@ -112,7 +112,7 @@ This means we need to skip all multiples of $3$ that are not multiples of $2$.
 
 Fortunately, removing the evens did not change the number we need to skip by.
 All multiples of $3$ are separated by 3 in `range_1` and also separated by 3 in `range_2`.
-For example, every multiple 3 in the full range is separated by 3 (should be obvious, since its a multiple of 3).
+For example, every multiple 3 in the full range is separated by 3 (should be obvious, since it is a multiple of 3).
 When we remove the even numbers, all multiples are now separated by 6 (e.g. 3 -> 9, 9 -> 15, 15 -> 21, etc.).
 However, removing even numbers also removes half the numbers between the multiples, so 6 becomes 3.
 
@@ -132,13 +132,13 @@ $$range_3.skip(1).keeper(cycle([6,2])) = range_4 = [7,11,13,17,19,23,29,31,37,41
 
 This calculation states to skip the first number ($5$), then keep the next 6 numbers (i.e. $7,11,13,17,19,23$), skip the next number ($25$), then keep 2 more numbers (i.e. $29, 31$), skip 1 ($35$), and then repeat the keep 6, skip 1, keep 2, skip 1 step.
 
-We would keep running this until the largest prime up to some final number is found, or after the yielding stops.
+We would keep running this until the largest prime up to some final number is found or after we stop yielding more value.
 
 ### Noticed Properties
 One thing to notice is that during the processing of the range, all numbers between the first prime `p` and its square `p^2` are prime. 
 This should make sense as any composite number with factors below `p` would have been removed in previous steps, and the first composite must be some multiple of `p` that does not share any factor in common with any primes below. 
 The first number that satisfies that is `p^2`.
-This can help improve the stopping condition, since if we know the final number to generate to, we can stop processing once we have a prime at least as large as the final number. 
+This can help improve the stopping condition, since if we know the final number to generate, we can stop processing once we have a prime at least as large as the final number. 
 
 Another thing to notice is that skipping will not always be consistently the same number, as seen with `range_4` using $5$ to calculate. 
 I don't know if there is a specific name in mathematics for this concept, but the idea is similar to a `step_by` function which can dynamically change.
@@ -146,7 +146,7 @@ To allow for this, I use a helper function to allow cyclically keeping a set of 
 
 As for the pattern, finding what list of keeps and skips satisfies the range mathematically is a bit outside my scope of knowledge.
 Instead, one way to find the pattern would be to calculate how many numbers are in-between two (remaining) multiples and look for when this pattern of gaps repeats.
-Although this requires copying the currently running generator to retrieve those values and waiting until the pattern repeat (which can be very wasteful), this is the current approach I took for my coding attempts. 
+Although this requires copying the currently running generator to retrieve those values and waiting until the pattern repeats (which can be very wasteful), this is the current approach I took for my coding attempts. 
 I hope to eventually use what I learn from the attempts to find the pattern either empirically with some function or mathematically with a formula.
 
 
@@ -260,7 +260,7 @@ range_3 = (number for number in skip_every([6,2], range_2))
 Given a range, I create a new range that skips over all multiples of 2 above 2 (first prime found).
 Then, using that new range, I create another range that skips over all remaining multiples of 3 (next prime found).
 After that, another range is created that skips over all remaining multiples of 5 with the [6,2,6,2,...] pattern.
-Keep doing this until it we are guaranteed to have a generator that yields only primes (up to some number). 
+Keep doing this until we are guaranteed to have a generator that yields only primes (up to some number). 
 
 In the next post, I document my attempt(s) to try and implement this as an actual generator, as well as describe the result. 
 
