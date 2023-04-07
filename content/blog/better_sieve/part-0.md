@@ -1,6 +1,6 @@
 +++
-title = "Part 0: Background"
-description = "Background information about sieving process"
+title = "Part 0: Background and Intro"
+description = "Background information about sieving process and an introduction to the coding idea."
 date = 2023-03-25
 updated = 2023-03-29
 weight = 0
