@@ -1,0 +1,10 @@
+<details>
+    {% if summary %}
+    <summary>{{summary}}</summary>
+    {% endif %}
+    {% if render_markdown | default(value=false)%}
+    {{body | markdown | safe}}
+    {% else %}
+    {{body}}
+    {% endif %}
+</details>
