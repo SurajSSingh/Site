@@ -16,10 +16,9 @@ In this post, I will go over some of my attempts to implement a better version o
 <!-- more -->
 If you would like to read up on the background information for this topic, please see [Part 0](@/blog/better_sieve/part-0.md).
 
-<details>
-<summary>TL;DR Summary</summary>
-I have an idea to take a range generator and try to yield only prime numbers by figuring out a pattern to skip each multiple of the prime. The hard part is to somehow skip when previous skips are already applied (for example, when skipping multiples of 3, we don't need to consider 6, since we skipped it at 2). I then document 2 attempts at a solution, each of which works for small numbers, but at the mid 1000s.
-</details>
+{% accordion(summary="TL;DR Summary", render_markdown=true) %}
+I have an idea to take a range generator and try to yield only prime numbers by figuring out a pattern to skip each multiple of the prime. The hard part is to somehow skip when previous skips are already applied (for example, when skipping multiples of 3, we don't need to consider 6, since we skipped it at 2). I then document 2 attempts at a solution, each of which works for small numbers, but fails at 1331 and 1573. I come to realize that I need to figure out how to find the pattern more mathematically.
+{% end %}
 
 
 ## Simple Generator Version
@@ -60,6 +59,8 @@ The main idea, as described in [part 0](@/blog/better_sieve/part-0.md#current-id
 Both Python and Rust have lazy ranges, meaning the values inside the range are not held in memory, rather they are only produced when they are requested upon.
 Ranges can be modified with skip and step-by functions to automatically jump over certain values.
 All of this combined could help build a better generator function, as it would only need to hold the current range it is working on and yield from there.
+However, this only works if the pattern of skips, or rather pattern of keeping values, is tailored to each successive range so that it produces the appropriate value.
+In this case, producing only values that are not a multiple of the prime being looked at.
 
 ## Setup
 
@@ -90,7 +91,7 @@ def generator_take_first(gen):
     except StopIteration:
         return None, gen
 ```
-2. A function that takes a generator and a list of how many indices to keeps, and then yields that many values, skipping the next value when the pattern changes. This match with the `keeper()` function used above.
+2. A function that takes a generator and a list of how many indices to keep, and then yields that many values, skipping the next value when the pattern changes. This implements the `keeper()` function used above.
 ```python, linenos
 def generator_keep_then_skip_once(gen, keep_pattern = None):
     # Keep index when pattern is a list
@@ -123,7 +124,7 @@ def generator_keep_then_skip_once(gen, keep_pattern = None):
         except StopIteration:
             break
 ```
-3. A function that takes a list and tries to find the shortest repeating pattern length. This is able to also handle partially defined patterns, for example: given $[2,4,5,2,4,5,2]$, it will determine that a length of 3 is enough to repeat, even though the last "pattern" is not fully defined. This does create an issue of how do we know if the pattern is correct (there might not be a pattern). This function does not address this, merely its goal is to find the shortest possible which can satisfy if we assumed it repeated.
+3. A function that takes a list and tries to find the shortest repeating pattern length. This is able to also handle partially defined patterns, for example: given $[2,4,5,2,4,5,2]$, it will determine that a length of 3 is enough to repeat, even though the last "pattern" is not fully defined. This does create an issue of how do we know if the pattern is correct (there might not be a pattern). This function does not address this, merely its goal is to find the shortest possible pattern which can satisfy if we assumed it repeated.
 ```python, linenos
 def shortest_periodic_pattern(list_with_pattern: list[int]) -> int:
     max_pattern_len = len(list_with_pattern)
@@ -145,6 +146,7 @@ def shortest_periodic_pattern(list_with_pattern: list[int]) -> int:
 ### Attempt 1
 
 Below is my first attempt at the problem, which successfully generates primes up to 1330.
+The code is encapsulated in a function that has one parameter called `final_number`, which is the number to generate the primes up to.
 I broke up the code into specific sections, but you can find the full code at the end of the section.
 
 The overall steps are as follows:
@@ -175,7 +177,7 @@ The already sieved primes list is there for building the final list to return.
 If no return was needed, I could just remove that variable, as it serves no other purpose as of now.
 On the other hand, the helping sieve primes list and current running range variables are central to the algorithm.
 The helpers inside the list will provide all the primes still needing to go through the loop and will be used to help create the "in-between" items to figure out the pattern for keeping values.  
-The current range keeps track of all the applied keep functions to make sure that it is producing the correct value.
+The current range keeps track of all the applied keep functions to make sure that the range is producing the correct value.
 
 #### Inside the Loop
 In the main loop (currently implemented as a `while True`), we can go through the process of refining the sieve.
@@ -192,8 +194,8 @@ current_running_range = peekable(current_running_range)
 ```
 
 With the prime number to sieve determined, we can get all the numbers in the range up to the prime squared (`p^2`), as they are guaranteed to be prime (as `p^2` is the smallest current composite number in the range). 
-This will do two things: 1) provide more numbers to help sieve out more multiple of the current prime `p`, and 2) move the range up to `p^2` and thus reduce the numbers need to "check".
-```python, linenos, linenostart=15
+This will do two things: 1) provide more numbers to help sieve out more multiples of the current prime `p`, and 2) move the range up to `p^2` and thus reduce the numbers need to "check".
+```python, linenos, linenostart=21
 # While the next number is smaller than p^2
 while current_running_range.peek() < sieving_prime**2:
     # Add next value in range to helping sieve
@@ -205,7 +207,7 @@ It is not yet known if these numbers will be enough to determine the pattern, bu
 We also need a copy of the current range and a counter.
 The copy is to allow getting numbers with the range without actually moving the range.
 The counter is to count the numbers that are in between each adjacent multiple.  
-```python, linenos, linenostart=15
+```python, linenos, linenostart=26
 # Create a list of multiples divisible by sieving prime not already removed from before
 between_list = [sieving_prime, sieving_prime ** 2] + [sieving_prime * p for p in helping_sieve_primes]
 # Create a copy of the current range 
@@ -217,7 +219,7 @@ between_counter = Counter()
 ```
 
 Now, let's count the numbers between each adjacent set of two multiples and use that to update the counter.
-```python, linenos, linenostart=15
+```python, linenos, linenostart=35
 # For each start and end point (a number in between list and the next number after)
 for start, end in zip(between_list, between_list[1:]):
     # Count how many primes from helping primes list are in between start and end
@@ -238,8 +240,8 @@ for start, end in zip(between_list, between_list[1:]):
         peek_value = collapsable_range.peek()
 ```
 
-We can then use the values in the counter to create a list of numbers to keep that follow a specific pattern, using the `shortest_periodic_pattern` function to get the most compact pattern.
-```python, linenos, linenostart=15
+We can then use the values in the counter to create a list of numbers to keep following a specific pattern, using the `shortest_periodic_pattern` function to get the most compact pattern.
+```python, linenos, linenostart=56
 # Skip first in list because already processed
 keep_list = [between_counter[key] for key in sorted(between_counter.keys())[1:] ]
 
@@ -251,7 +253,7 @@ pattern = keep_list[:pattern_length] if pattern_length > 1 else keep_list
 Then we can start finishing up.
 We can add `p` into the list of already sieved primes and update the max prime with the latest number in the helper list.
 If the max prime is bigger than or equal to the final number to calculate, we are done with the loop and so we stop.
-```python, linenos, linenostart=15
+```python, linenos, linenostart=63
 # Finished with prime so move it to already sieved
 already_sieved_primes.append(sieving_prime)
 
@@ -263,7 +265,7 @@ if max_prime >= final_number:
     break
 ```
 Otherwise, moving along, we can update the currently running range by removing the first value (should be `p^2`) and running the keep-skip function with the pattern.
-```python, linenos, linenostart=15
+```python, linenos, linenostart=73
 # Remove square of prime for the current range
 square_of_prime, current_running_range = generator_take_first(current_running_range)
 
@@ -276,15 +278,14 @@ current_running_range = generator_keep_then_skip_once(current_running_range, pat
 
 #### Return
 Once the loop is finished, return all the primes that have been already sieved as well as the number of primes still in the queue to be processed (up to the final number).
-```python, linenos, linenostart=15
+```python, linenos, linenostart=83
 return already_sieved_primes + [p for p in helping_sieve_primes if p <= final_number]
 ```
 
 #### Full Code
 {% accordion(summary="Attempt 1 Full Code", render_markdown=true) %}
 ```python, linenos
-# ALMOST WORKING - works until 1331
-def my_new_sieve(final_number:int = 1330) -> list[int]:
+def new_sieve_attempt_1(final_number:int = 1330) -> list[int]:
     # Primes that have already been processed and whose multiples can never appear in the range
     already_sieved_primes = []
 
@@ -356,10 +357,10 @@ def my_new_sieve(final_number:int = 1330) -> list[int]:
         if max_prime >= final_number:
             break
         
-        # Remove square of prime from the current range
+        # Remove square for prime from the current range
         square_of_prime, current_running_range = generator_take_first(current_running_range)
 
-       # Verify that we have reached the prime squared
+        # Verify that we have removed the prime squared as the first item
         assert square_of_prime == sieving_prime ** 2 
 
         # Produce the next range
@@ -375,12 +376,17 @@ For my first attempt, the idea seems to be simple enough to follow.
 Have a range, gather some known primes, use that to generate a pattern for which numbers to keep, update the range, rinse and repeat.
 Because of this simplicity, it might not be surprising that there are issues with the function.
 
-The main issue I found is that while it works well for small numbers, it fails when it reaches 1331 (which is 11^3).
+The main issue I found is that while it works well for small numbers, it fails when it reaches $1331$ (which is $11^3$).
 When running this, the function allows 1331 to be kept as a prime when it is not.
-I appear to be missing the repeating pattern for when the range reaches 11.
-There likely is an issue with developing the pattern for 11, either that it is incomplete or there is no pattern for 11.
+I appear to be missing the repeating pattern for when the range reaches $11$.
+There likely is an issue with developing the pattern for $11$, either that it is incomplete or there is no pattern for $11$.
 
-Besides that, other improvements I could consider would be removing some unnecessary calculations. 
+There is also the issue of the assertion being broken when sieving $53$, as the first value of the updated range is not its square ($2809$), but rather $2813$.
+This is likely a carry over for the issue that happens at $11$, or technically just before it.
+Notice that $53$ is the first prime after $49$, which is the square of $7$.
+This lends more evidence that something is amiss for the $11$ pattern, as all prime numbers below it are fine, but after that is not.
+
+Besides those two issues, other improvements I could consider would be removing some unnecessary calculations. 
 For example, start with the "evens" already sieved out and have 2 already processed.
 Maybe also do the same for multiples of 3, as that is also an easy one to process.
 Another idea might be to include more known primes in the helper list, say by getting all the additional primes between the first and second composite numbers, which could help with finding the pattern.
@@ -388,7 +394,7 @@ Another idea might be to include more known primes in the helper list, say by ge
 ### Attempt 2
 
 My second attempt uses the framework of the previous attempt and tries to improve it in certain ways. 
-I will only go over the changes to the code, all others should be the same as the previous attempt.
+I will only go over the changes to the code, all other code snippets should be the same as the previous attempt.
 See the full attempt towards the end of this section for the full code.
 
 #### Update Setup
@@ -420,11 +426,12 @@ max_prime = helping_sieve_primes[-1]
 
 #### Update Loop
 With the max prime value being initialized before the loop, I can update the while loop to be `while max_prime < final_number` (i.e. conversion from a "do-while" to a regular "while" loop).
+This update removes the `max_prime` check inside the loop.
 
 Then inside, I make a small update to the search for the number of primes.
 In the attempt before, the loop would stop once it reaches the prime squared.
 I still do this, but I skip over the prime value squared to run one more loop. 
-```python, linenos, linenostart=15
+```python, linenos, linenostart=29
 # Count of how many numbers (all primes) are between p and p^2
 while current_running_range.peek() <= sieving_prime**2:
     # Skip the first composite number and stop the loop
@@ -434,26 +441,33 @@ while current_running_range.peek() <= sieving_prime**2:
     # Count the next prime helper number
     helping_sieve_primes.append(next(current_running_range))
 ```
-Once the prime square is skipped, I can also take the number up to the multiplication of the current prime (`prime_0`) and the next prime (`prime_1`).
+Once the prime square is skipped, I can also take the number up to the multiplication of the current prime (`prime_0`) and the next smallest prime (`prime_1`).
 These numbers are also guaranteed to be prime because the next composite number is guaranteed to be the `prime_0` * `prime_1`, since it is the combination of the two smallest distinct primes[^remaining-composite-multiples-note].
 This should provide more numbers to help with finding the pattern.
-```python, linenos, linenostart=15
+```python, linenos, linenostart=38
 sieving_helper = helping_sieve_primes[0]
 # While the next number is smaller than p*p+1, add the next number to helping list
-while current_running_range.peek() < sieving_prime*sieving_helper::
+while current_running_range.peek() < sieving_prime*sieving_helper:
     # Count the next prime helper number
     helping_sieve_primes.append(next(current_running_range))
 ```
+
 Because of the expanded list of helping primes, I updated the between list to include the current prime cubed (as the new final multiple). 
-```python, linenos, linenostart=15
+```python, linenos, linenostart=45
 between_list = sorted([sieving_prime, sieving_prime ** 2, sieving_prime**3] + [sieving_prime * p for p in helping_sieve_primes])
 ```
-The for-loop after that finds the numbers are kept the same.
-Once all the numbers are found and tallied up, I find the shortest repeating pattern like before, but with a small twist being that I have to move the beginning two numbers to the end.
+
+The for-loop after is kept the same.
+Once all the numbers are found and tallied up, I find the shortest repeating pattern like before using the keep list, but with a small twist.
+First, the keep list does not exclude the first item anymore, as now two items are already accounted for in the pattern. 
+Instead, once the pattern repetition is found, I have to move the beginning two numbers to the end.
 This is because getting the prime before the current prime squared has already exhausted the range.
 Similar for the primes up to current prime times next prime.
-In order to keep the order correct, this means "rotating" the list to shift everything two units back and move the first two to the end.
-```python, linenos, linenostart=15
+In order to keep the order correct, this means "rotating" the list to shift everything two units back and move the first two numbers to the end of the pattern.
+```python, linenos, linenostart=73
+# Skip first in list because already processed
+keep_list = [between_counter[key] for key in sorted(between_counter.keys())]
+
 # Find the pattern
 pattern_length = shortest_periodic_pattern(keep_list)
 pattern = deque(keep_list[:pattern_length] if pattern_length > 1 else keep_list)
@@ -462,21 +476,20 @@ pattern = list(pattern)
 ```
 Once the pattern is determined, the current prime can be moved to the already processed list and the current range can be updated.
 Since the range has removed all numbers till the multiplication of the two lowest primes, I had to update the assertion.
-```python, linenos, linenostart=15
+```python, linenos, linenostart=88
 # Remove prime_0 * prime_1 from the current range        
 mult_of_lowest_two_primes, current_running_range = generator_take_first(current_running_range)
 
 # Verify that we have reached prime_0 * prime_1
 assert mult_of_lowest_two_primes == sieving_prime * sieving_helper 
 ```
-After the update, the while-loop should automatically stop once the number of primes reaches the final number (likely slightly faster since there are more numbers).
+After the update, the while-loop should automatically stop once the number of primes reaches the final number (likely slightly faster since there are more numbers in the helper list).
 
 #### Full Code
 
 {% accordion(summary="Attempt 2 Full Code", render_markdown=true) %}
 ```python, linenos
-# ALMOST WORKING  - works until 1573
-def my_new_sieve(final_number:int = 1573) -> list[int]:
+def new_sieve_attempt_2(final_number:int = 1573) -> list[int]:
     
     # Special case: There are no primes less than 2
     if final_number < 2:
@@ -498,7 +511,7 @@ def my_new_sieve(final_number:int = 1573) -> list[int]:
     # while max prime is less than the final number 
     #   (meaning not all primes reached in range of final number)
     while max_prime < final_number:
-        # The current prime to sieve (aliased as "p" in comments)
+        # The current prime to sieve (ref as "p" in comments)
         sieving_prime = helping_sieve_primes.popleft()
 
         # Make current range with one look ahead
@@ -515,7 +528,7 @@ def my_new_sieve(final_number:int = 1573) -> list[int]:
         
         sieving_helper = helping_sieve_primes[0]
         # While the next number is smaller than p*p+1, add the next number to helping list
-        while current_running_range.peek() < sieving_prime*sieving_helper::
+        while current_running_range.peek() < sieving_prime*sieving_helper:
             # Count the next prime helper number
             helping_sieve_primes.append(next(current_running_range))
         
@@ -578,21 +591,24 @@ def my_new_sieve(final_number:int = 1573) -> list[int]:
 
 #### Analysis
 With this second attempt finished, I have done slightly better than my attempt 1.
-Now, it fails at 1573 (11^2 * 13). 
-I think I see the problem being just that I don't use the square as another thing to multiply the helper primes by, but this illustrates a more fundamental issue: I have no idea how the pattern is calculated.
+Now, it fails at $1573$ ($11^2 * 13$). 
+Also, the assertion now fails at $61$, where the result should be $4087$ ($61*67$), but is actually $4093$ (which is surprisingly prime).
+
+I think I see the problem being just that I don't use the square as another thing to multiply the helper primes by, which should be an easy patch. 
+But this demonstrates a more fundamental issue: I have no idea how the pattern is calculated.
 While the idea to pre-process the range did help remove certain steps of the calculations and adding more helping primes helped increase the pattern sequence, neither did much for finding the actual pattern.
 
 The big thing here is that I need to figure out how the pattern is derived.
 Currently, I get it by making a copy of the range and assuming the repetition happens.
-However, that might not be the case, so it might be time to look into the underlying math of this problem.
+However, that might not be the case, so it might be time to look into the underlying mathematics of this problem.
 
 ## Conclusion
 
 So based on these results, did I succeed? 
-While I didn't get to the result of actually getting the generator working, this did provide some good insight into how I might approach future attempts.
+While I didn't get to the result of actually getting the generator working, this did provide some helpful insight into how I might approach future attempts.
 Namely, I am going to need to figure out how best to find the pattern for any given prime and how much information is needed to accomplish that task.
 
 In the next post, I will take a step back and try to review some of the mathematical ideas present for this problem and review other kinds of solutions related to the Sieve of Eratosthenes.
 
 ## Footnotes
-[^remaining-composite-multiples-note]: One might try to see if the third composite number would always be the current prime times the second next prime (which could give even more primes to help). The smallest counterexample is $5$: $5 * 11 = 55$ but $7^2 = 49$.    
+[^remaining-composite-multiples-note]: Possibly as an extension of this idea, one might try to see if the third composite number would always be the current prime times the second next prime (which could give even more primes to help). Unfortunately, that is note the case. The smallest counterexample for my created range is $5$: $5 * 11 = 55$ but $7^2 = 49$.
