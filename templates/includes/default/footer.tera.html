@@ -1,5 +1,5 @@
 {% if config.generate_feed %}
-{% set feed_link = config.base_url ~ config.feed_filename %}
+{% set feed_link = config.base_url ~ '/' ~ config.feed_filename %}
 {{macros::feather_svg_direct(link=feed_link, name="Atom Feed", rel_link="rss", stroke="var(--primary)")}}
 {% endif %}
 {% for website in config.extra.external_link %}
