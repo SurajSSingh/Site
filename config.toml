@@ -1,10 +1,10 @@
 ############ GENERAL SETTINGS ############
 # The URL the site will be built for
-base_url = "https://surajssingh.github.io/Tech-Tree-Blog/"
+base_url = "thetechtreeblog.com"
 
 # The site title and description; used in feeds by default.
-title = "Tech Tree Blog"
-description = "A blog made by Suraj S Singh"
+title = "The Tech Tree Blog"
+description = "Unlocking knowledge one post at a time."
 
 # The default language; used in feeds.
 default_language = "en"
