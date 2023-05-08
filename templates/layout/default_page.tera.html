@@ -20,6 +20,10 @@
 
 {% block head_info %}
 {{ super() }}
+{% if allow_comments %}
+{% set backline_base_url = config.extra.fallback_url | default(value=config.base_url) %}
+<meta name="giscus:backlink" content="{{ backline_base_url ~ page.path}}">
+{% endif %}
 {% if page.extra.render_mermaid | default(value=false) %}
 {% include "includes/scripts/mermaid.tera.html" %}
 {% endif %}

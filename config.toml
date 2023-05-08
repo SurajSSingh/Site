@@ -197,6 +197,8 @@ nav_sections = ["blog", "notes", "media"]
 
 authors = "Suraj S. Singh"
 
+fallback_url = "https://surajssingh.github.io/Tech-Tree-Blog"
+
 # Array of links to external website
 # Minimum requirement: 
 #   * name: string 
