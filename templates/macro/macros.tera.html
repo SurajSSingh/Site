@@ -34,9 +34,9 @@
                 {% endif %}
             </a>
         </hgroup>
-        {% set latest_date = self::section_latest_date(info=info) %}
+        {% set latest_date = self::section_latest_date(info=info) | trim %}
             {% if latest_date %}
-            <p>Latest Update: {{latest_date | trim}}</p>
+            <p>Latest Update: {{latest_date}}</p>
             {% elif info.updated %}
             <p>Latest Update: {{info.updated }}</p>
             {% elif info.date %}
