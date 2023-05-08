@@ -7,5 +7,15 @@
             "language": "markdown",
             "scheme": "file"
         }
+    ],
+    "cSpell.words": [
+        "Atkin",
+        "OEIS",
+        "Pritchard",
+        "Sundaram"
+    ],
+    "languageToolLinter.languageTool.ignoredWordsInWorkspace": [
+        "atkin",
+        "oeis"
     ]
 }
