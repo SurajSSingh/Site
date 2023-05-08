@@ -34,25 +34,14 @@
                 {% endif %}
             </a>
         </hgroup>
-        {% set latest_date = [] %}
-        {% if info.subsections %}
-        {% set latest_date = latest_date | concat(with=info.subsections | map(attribute="date")) |
-        concat(with=info.subsections |
-        map(attribute="updated")) %}
-        {% endif %}
-        {% if info.pages %}
-        {% set latest_date = latest_date | concat(with=info.pages | map(attribute="date") | concat(with=info.pages |
-        map(attribute="updated"))) %}
-        {% endif %}
-        <p>
+        {% set latest_date = self::section_latest_date(info=info) %}
             {% if latest_date %}
-            Latest Update: {{latest_date | sort | last}}
+            <p>Latest Update: {{latest_date | trim}}</p>
             {% elif info.updated %}
-            Latest Update: {{info.updated }}
+            <p>Latest Update: {{info.updated }}</p>
             {% elif info.date %}
-            Latest Update: {{info.date }}
+            <p>Latest Update: {{info.date }}</p>
             {% endif %}
-        </p>
     </header>
     {% if info.summary %}
     {{info.summary | safe}}
@@ -90,6 +79,35 @@
 </article>
 
 {% endmacro article_card %}
+{% macro section_latest_date(info)%}
+{% set section_dates = [] %}
+{% if subsection_dates is undefined %}
+{% set subsection_dates = [] %}
+{% endif %}
+
+{% if info.pages %}
+{% set section_dates = section_dates | concat(with=info.pages | map(attribute="date")) %}
+{% set section_dates = section_dates | concat(with=info.pages | map(attribute="updated")) %}
+{% endif %}
+
+{% if info.subsections %}
+{% for subsection_path in info.subsections %}
+{% set subsect = get_section(path=subsection_path) %}
+{% set subdate = self::section_latest_date(info=get_section(path=subsection_path)) | trim%}
+{% if subdate %}
+{% set subdate = subdate | date %}
+{% set_global subsection_dates = subsection_dates | concat(with=subdate) %}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+
+{% set latest_date = section_dates | concat(with=subsection_dates) | sort | last %}
+{% if latest_date %}
+{{latest_date | trim | date}}
+{% endif %}
+{% endmacro section_latest_date %}
+
 {% macro build_search_index(section_paths, recursive=true)%}
 {%- for section_path in section_paths -%}
 {%- set section = get_section(path=section_path) -%}
