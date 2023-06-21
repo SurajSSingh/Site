@@ -193,7 +193,7 @@ index_format = "elasticlunr_json"
 # author value will be available using {{ config.extra.author }} in templates
 #
 
-nav_sections = ["blog", "notes", "media"]
+nav_sections = ["blog", "notes", "media", "devlog"]
 
 authors = "Suraj S. Singh"
 
