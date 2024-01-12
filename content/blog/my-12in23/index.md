@@ -10,7 +10,9 @@ allow_comments = true
 +++
 
 This post will go over my experience with the Exercism #12-in-23 Challenge and what will happen next.
+Much of this will be a retrospective of what I remember feeling for each language rather than a walkthrough of my solutions.
 <!-- more -->
+
 ## Prior experience with Exercism
 
 Before I get into my thoughts through each of the months in the challenge, a bit of background of myself.
@@ -28,58 +30,98 @@ However, after that, I didn't really have much time to work on the exercise (mos
 In 2023, I had just graduated.
 
 One extra challenge I set for myself was trying to do all the coding inside the Exercism web editor.
+This was more so to try out each of the languages to see {}.
+However, for those trying it, I would at least advise you to work it out in a dedicated editor {}.
 
 ### January
-I did not do much for January since I didn't realize #12-in-23 had started. 
+I did not do much for January since I didn't realize #12-in-23 had started, so I didn't official start until February. 
 However, I did a finish a couple of unfinished Haskell exercises and looked into Python for mentoring.
-But, I didn't official start until February.
+Besides that, I mostly {}.
 
 ### Functional February
-For February, I worked on the [Elixir track](https://exercism.org/tracks/elixir).
+For February, I worked on the [Elixir track](https://exercism.org/tracks/elixir) and finished 9 exercises. 
+
+The concept I had the hardest time grasping was `atoms`, mostly since I had experience with the other concepts from other languages.
+The main thing I got tripped up on {}.
+
+I really liked Elixir as a language.
 
 ### Mechanical March
-I focused on Rust track.
-
+For the March theme, I focused on Rust track.
 I had some small experience with Rust during my graduate program, specifically with implementing algorithms for my Data Mining course work.
+However, I wanted to learn .
 
+For this month, I had a mix of functional programming with some imperative code, which Rust excels at.
+
+The hardest problem for me was the [Simple Linked List](https://exercism.org/tracks/rust/exercises/simple-linked-list) exercise.
+Mostly that was done to how I needed to conceptualize the `Box` type and the interaction between the `SimpleLinkedList` and `Node`.
 
 Like others have already said, Rust is an awesome language to work in.
+Even without help from an IDE, Rust was fairly simple to work in, at least for getting the basics down.
+The compiler also provided .
 
 ### Analytical April
-Did the Julia track.
+For April, I did the Julia track.
+I mostly chose this since I already had some experience in Python and R, and wanted to learn something new.
+
+I found the idea of Unicode operators {}.
+
+
 
 ### Mindshift May
-I worked on the Prolog track.
-One of the few times I actually woke up to write a solution.
+For the month of May, I worked on the Prolog track.
+I made this choice mostly to learn about a different declarative paradigm from function programming.
+
+Working with Prolog was fairly strange, as I had to unlearn my imperative way of thinking.
+For example, 
+
+The biggest hurdle for me was the cut operator {}.
+
+However, this month was one of the most rewarding.
+It was the only time in this challenge where I physically woke up to write a solution.
 
 ### Summer of Sexp (June)
-Clojure track.
+For June, I focused on the Clojure track.
+
+I also worked on implementing MAL, which is Clojure inspired.
 
 ### Jurassic July
-C track.
-Surprisingly, really simple.
+For July, I worked through the C track exercises.
+I only knew C from what I remember from the introduction to C++, so I initially was hesitant to {}.
+However, surprisingly, I found working in C to be really simple once you get the major concepts down.
 
 It was also interesting to note that: 1) `bool` type is not built-in, but 2) C actually pointed out that I should include `<bool>`.
 
 This month, I also finished Haskell.
 
 ### App August
-Elm
+For August, I worked through the Elm track.
+
+Just like Rust, I liked the helpful compiler.
 
 ### Slim-line September
-Raku
+For September, I worked on the Raku track.
+
+The hardest part for Raku was figuring out how to work with strings.
+Surprisingly, the regex wasn't that bad.
 
 ### Object-Oriented October
-Ruby
+For October, I focused on Ruby.
+I had already had some experience with Java and C#.
 
 ### Nibby November
-WASM.
-Very much like C.
+For November, I worked on the WASM track.
+The main reason I chose this was to get an idea for working with Wasm from other languages like Rust or TypeScript.
 
-Also, the first time posting in the Exercism Discord.
+I felt it much like C, simple once you got the major concepts down.
+
+Also, this was the first time I posted in the Exercism Discord.
+
 
 ### December
-Wren.
+For December, I worked through the Wren track.
+The big reason I wanted to try Wren was to compare it to Lua.
+
 
 ### Overview
 Gave a good focus for what to do.
@@ -88,7 +130,12 @@ Gave a good focus for what to do.
 
 ## What's next
 
+### Comp Lang Comp
+In late 2022, I started work on a website to compare a bunch of programming/computer languages syntaxes against each other.
+The key think I wanted to do for this was provide links to resources for learning about the syntaxes.
 
+I still plan to continue working on this.
+The main thing I want to do before getting contributions for others is update the website to make it easier to work with.
 
 ### #48-in-24
 
