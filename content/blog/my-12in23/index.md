@@ -1,8 +1,8 @@
 +++
-title = "Reflecting on my work for Exercism #12in23"
+title = "Reflecting on #12in23 Challenge"
 description = "A post reviewing my work for Exercism's 12-in-23 Challenge"
-date = 2024-01-08
-# updated = 2024-01-07
+date = 2024-01-15
+# updated = 2024-01-15
 draft=true
 
 [extra]
@@ -10,7 +10,8 @@ allow_comments = true
 +++
 
 This post will go over my experience with the Exercism #12-in-23 Challenge and what will happen next.
-Much of this will be a retrospective of what I remember feeling for each language rather than a walkthrough of my solutions.
+Much of this will be a retrospective of what I remember feeling for each language rather than a walkthrough of my solutions, 
+so expect a more stream of consciousness style of writing.
 <!-- more -->
 
 ## Prior experience with Exercism
@@ -25,48 +26,61 @@ The F# exercises transitioned into some Haskell, as one of my Master's course us
 
 However, after that, I didn't really have much time to work on the exercise (mostly due to my coding instructor work ramping up and finishing up my Master's degree).
 
-## 12-in-23
+## 12-in-23 Challenge
 
-In 2023, I had just graduated.
+In 2023, I had just graduated and I was finishing up some student projects.
+I had some free time and wanted to learn more about programming languages.
+Initially, I tried to work on the [Comp Lang Comp] project, though I didn't have much motivation to continue due to other commitments.
+
+Instead, when I learned about the 12-in-23 Challenge by Exercism, I thought it would be a good way to get exposed to a bunch of languages.
+While there were only 12 themes for the year, so I couldn't deep dive into any one language, it would at least introduce a bunch of different paradigms for me to work through.
 
 One extra challenge I set for myself was trying to do all the coding inside the Exercism web editor.
-This was more so to try out each of the languages to see {}.
-However, for those trying it, I would at least advise you to work it out in a dedicated editor {}.
+This was more so to try out each of the languages in its simplest form.
+This way, it would require me to read the docs and take notes for how to type.
+It did work for the docs, but I didn't actually have a note-taking system at the time, so that part failed.
 
 ### January
 I did not do much for January since I didn't realize #12-in-23 had started, so I didn't official start until February. 
 However, I did a finish a couple of unfinished Haskell exercises and looked into Python for mentoring.
-Besides that, I mostly {}.
+Besides that, there wasn't much I did for Exercism until February rolled around.
 
 ### Functional February
 For February, I worked on the [Elixir track](https://exercism.org/tracks/elixir) and finished 9 exercises. 
+Originally, I wanted to do Haskell, but I wanted to try out a [BEAM language], since I never really worked with one before.
+This lead me to Elixir and Gleam.
+I eventually settled on Elixir, mostly down to wanting to check out the Phoenix framework (though I didn't actually have the time to create a project with it).
 
-The concept I had the hardest time grasping was `atoms`, mostly since I had experience with the other concepts from other languages.
-The main thing I got tripped up on {}.
+I like learning Elixir, especially with it simple syntax and being functional without being too overbearing with types.
+The concept I had the hardest time grasping was `atoms`, mostly since I had never experienced it from other languages.
+The main thing I got tripped up on was thinking of `atoms` as variable identifier, rather than predefined constant.
 
-I really liked Elixir as a language.
+The biggest thing I remember for this month was the [Interview with Jose Valim](https://youtu.be/LknqlTouTKg).
+Some ideas brought up were some things I had already considered working through, such as having language cheat sheets and creating objects using regex.
 
 ### Mechanical March
 For the March theme, I focused on Rust track.
 I had some small experience with Rust during my graduate program, specifically with implementing algorithms for my Data Mining course work.
-However, I wanted to learn .
+Beyond that, I wanted to learn more about Rust and thought working through some exercises would help with that.
 
 For this month, I had a mix of functional programming with some imperative code, which Rust excels at.
-
+I really loved the way I could chain functions (usually through the Iterator trait), 
+but could always add small imperative elements like mutable variable to help build my solution.
 The hardest problem for me was the [Simple Linked List](https://exercism.org/tracks/rust/exercises/simple-linked-list) exercise.
 Mostly that was done to how I needed to conceptualize the `Box` type and the interaction between the `SimpleLinkedList` and `Node`.
 
-Like others have already said, Rust is an awesome language to work in.
+Like you've probably heard from others, Rust is an awesome language to work in.
 Even without help from an IDE, Rust was fairly simple to work in, at least for getting the basics down.
-The compiler also provided .
+The compiler also provided great help when I made some simple to fix mistake, and usually guided me towards a working solution.
+For the remaining of 2023, I would continue working on and off in Rust for some projects.
 
 ### Analytical April
 For April, I did the Julia track.
-I mostly chose this since I already had some experience in Python and R, and wanted to learn something new.
-
-I found the idea of Unicode operators {}.
-
-
+I mostly chose this since I already had some experience in Python and R, and wanted to compare Julia to it.
+For the exercises, I mostly came at it from a Python based approach, which might bais my solutions towards that.
+However, with that, I found Julia to be a more compact Python.
+I especially liked the way lambdas are done in Julia over Python, since it is just an arrow `->` away instead of the word `lambda`.
+Also, I found the idea of Unicode identifier to be really cool to add executable math equations, although I didn't use that as much.
 
 ### Mindshift May
 For the month of May, I worked on the Prolog track.
@@ -123,21 +137,28 @@ For December, I worked through the Wren track.
 The big reason I wanted to try Wren was to compare it to Lua.
 
 
-### Overview
+### What I learned from this challenge
 Gave a good focus for what to do.
 
 2023 is the year of practicing Rust.
 
 ## What's next
 
+Here's what's next for me after the challenge.
+
 ### Comp Lang Comp
 In late 2022, I started work on a website to compare a bunch of programming/computer languages syntaxes against each other.
-The key think I wanted to do for this was provide links to resources for learning about the syntaxes.
+The key think I wanted to do for this was provide links to resources for learning about the syntaxes from primary sources.
+Originally, I had planned to work on this during the challenge, but time slipped away from me, and I didn't really have time to contribute.
 
-I still plan to continue working on this.
-The main thing I want to do before getting contributions for others is update the website to make it easier to work with.
+However, with what I learned and some resources I have found, I still plan to continue working on this.
+The main thing I want to do before opening it up to public contributions is updating the website to make it easier to work with.
+Currently, it is a Slate website, which I mostly chose because it had the side by side code view.
+The only issue was that I didn't really have a good grasp of Ruby to make changes on my own. 
 
 ### #48-in-24
 
 Every Tuesday starting on January 16, 2024, new exercise will release.
 Don't know the full plan, but I will be doing some blog post for (some of) these exercises.
+
+## Footnotes
