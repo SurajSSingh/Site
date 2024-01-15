@@ -111,12 +111,14 @@ Although the language itself doesn't actually provide the safeguards of modern l
 
 This month, I also finished a bunch more Haskell exercises.
 
-### App August
+### Appy August
 For August, I worked through the Elm track.
 This was mostly down to trying out something I could use for web app development.
 Considering what I learned from Elixir and Haskell, Elm's functional programming features felt really simple to grasp.
 Just like Rust, I liked the helpful compiler guiding towards a working solution.
 While I did like working in Elm, I actually settled on Svelte for web development.
+This was mostly since Svelte's HTML-focus templating felt more natural for me.
+However, Elm's ease of creating type-safe models and functions was much better than TypeScript.
 
 I also finished a few more exercises for Elixir this month.
 
@@ -129,26 +131,38 @@ I would have wanted to spend more time going through the Grammar tool (and espec
 
 ### Object-Oriented October
 For October, I focused on Ruby.
-I had already had some experience with Java and C#.
+I had already had some experience with Java and C#, and Ruby was the only object-oriented I hadn't actually used before.
+Ruby itself was a fairly easy language for me to pick up and nothing felt too out of the ordinary.
+Two things that stood out for me were the native use of regex (which made string search really easy) and the concept of blocks (which felt very much like [Rust's closure](https://doc.rust-lang.org/reference/influences.html)).
 
-### Nibby November
+### Nibbly November
 For November, I worked on the WASM track.
-The main reason I chose this was to get an idea for working with Wasm from other languages like Rust or TypeScript.
-
+The main reason I chose this was to get an idea for working with WebAssembly from other languages like Rust or TypeScript (via [AssemblyScript](https://www.assemblyscript.org)).
 I felt it much like C, simple once you got the major concepts down.
+The big thing I struggled with was trying to visualize thinking about strings.
+Since WebAssembly itself only has the concept of numbers, strings are just a series of bytes stored in memory.
+The hard part was figuring out the way memory works in WebAssemby.
+The rest would then be handled by a memory "pointer" (memory offset) and string length, just like C.
 
-Also, this was the first time I posted in the Exercism Discord.
-
+Something I did for this month was work on a [visual debugger](https://github.com/SurajSSingh/WASVD) to help understand the stack-based processing.
+This gave a better idea about how WebAssembly is implemented.
+Also, this was the first time I posted in the Exercism Discord, 
+where I listed some helpful resources for working directly in Wasm.
+Overall, it felt nice learning a lower level language and appreciating the affordances provided by higher level ones.
 
 ### December
 For December, I worked through the Wren track.
 The big reason I wanted to try Wren was to compare it to Lua.
-
+For the most part, Wren feel very much like a traditional object-oriented programming language.
+Nothing stood out too much, though that could be because I approach much of the problems from an imperative view.
+Looking at some other solutions, I saw that they were using block like Ruby, and had a more functional style,
+which I should have tried more of.
 
 ### What I learned from this challenge
-Gave a good focus for what to do.
-
-2023 is the year of practicing Rust.
+There can a lot to say about all that I learned throughout this challenge, here are my major takeaways:
+1. The challenge gave me a focused point to learn a specific language in a good amount of time (enough to understand where to go next).
+2. I learned and practiced a specific paradigm by language.
+3. Gave me some inspiration for projects for learning languages (Comp-Lang-Comp and WASVD). 
 
 ## What's next
 
@@ -165,6 +179,6 @@ Currently, it is a Slate website, which I mostly chose because it had the side b
 The only issue was that I didn't really have a good grasp of Ruby to make changes on my own. 
 
 ### #48-in-24
-
-Every Tuesday starting on January 16, 2024, new exercise will release.
+This is the successor to the #12in23 challenge.
+Every Tuesday starting on January 16, 2024, a new exercise will be highlighted.
 Don't know the full plan, but I will be doing some blog post for (some of) these exercises.
