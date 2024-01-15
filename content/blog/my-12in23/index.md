@@ -63,7 +63,7 @@ For the March theme, I focused on Rust track.
 I had some small experience with Rust during my graduate program, specifically with implementing algorithms for my Data Mining course work.
 Beyond that, I wanted to learn more about Rust and thought working through some exercises would help with that.
 
-For this month, I had a mix of functional programming with some imperative code, which Rust excels at.
+For this month, I had a mix of functional programming with some procedural code, which Rust excels at.
 I really loved the way I could chain functions (usually through the Iterator trait), 
 but could always add small imperative elements like mutable variable to help build my solution.
 The hardest problem for me was the [Simple Linked List](https://exercism.org/tracks/rust/exercises/simple-linked-list) exercise.
@@ -84,40 +84,48 @@ Also, I found the idea of Unicode identifier to be really cool to add executable
 
 ### Mindshift May
 For the month of May, I worked on the Prolog track.
-I made this choice mostly to learn about a different declarative paradigm from function programming.
-
-Working with Prolog was fairly strange, as I had to unlearn my imperative way of thinking.
-For example, 
-
-The biggest hurdle for me was the cut operator {}.
-
+I made this choice mostly to learn about a different declarative paradigm from functional programming.
+Working with Prolog was fairly strange at first, as I had to unlearn my imperative way of thinking.
+For example, learning not to think in assigning variables directly, but having atoms bound to a value based on the logical relations.
+Once I got my head around the concepts, things clicked into place form me.
+The biggest hurdle for me was learning how to use the cut operator correctly.
 However, this month was one of the most rewarding.
-It was the only time in this challenge where I physically woke up to write a solution.
+It was the only time in this challenge where I physically woke up to write a solution that popped into my mind.
 
 ### Summer of Sexp (June)
 For June, I focused on the Clojure track.
+I hadn't worked with a LISP dialect before and none of them particularly called me, 
+so I just chose the one that had I had heard about the most.
+For the most part, nothing seem to be too out of the ordinary for me besides the prefix function/operator application.
 
-I also worked on implementing MAL, which is Clojure inspired.
+For this month, I also worked on implementing [Make-A-Lisp] in Rust, which is Clojure inspired Lisp.
+The synergy with this month gave me a better grasp of how Lisps work and some concepts related to language development.
 
 ### Jurassic July
 For July, I worked through the C track exercises.
-I only knew C from what I remember from the introduction to C++, so I initially was hesitant to {}.
+I only knew C from what I remember from the introduction to C++, so I initially was hesitant with how the coding would go.
 However, surprisingly, I found working in C to be really simple once you get the major concepts down.
+It was also interesting to note that: 1) `bool` type is not built-in, but 2) C actually pointed out that I should include `<stdbool.h>`.
+I guess I expected C to be more obtuse (though it could just be that I haven't programmed in a large C project).
+Although the language itself doesn't actually provide the safeguards of modern languages, I didn't really run into issues with out-of-bound or off by 1 errors (thanks Rust for baking the borrow checker into my brain, I guess). 
 
-It was also interesting to note that: 1) `bool` type is not built-in, but 2) C actually pointed out that I should include `<bool>`.
-
-This month, I also finished Haskell.
+This month, I also finished a bunch more Haskell exercises.
 
 ### App August
 For August, I worked through the Elm track.
+This was mostly down to trying out something I could use for web app development.
+Considering what I learned from Elixir and Haskell, Elm's functional programming features felt really simple to grasp.
+Just like Rust, I liked the helpful compiler guiding towards a working solution.
+While I did like working in Elm, I actually settled on Svelte for web development.
 
-Just like Rust, I liked the helpful compiler.
+I also finished a few more exercises for Elixir this month.
 
 ### Slim-line September
 For September, I worked on the Raku track.
-
+I was going between Perl and Raku, and what decided it for me was Raku's parsing tools.
 The hardest part for Raku was figuring out how to work with strings.
-Surprisingly, the regex wasn't that bad.
+Surprisingly, the regex wasn't that bad, though that could just be how my brain works.
+I would have wanted to spend more time going through the Grammar tool (and especially the named regex for use in a language I am considering).
 
 ### Object-Oriented October
 For October, I focused on Ruby.
@@ -160,5 +168,3 @@ The only issue was that I didn't really have a good grasp of Ruby to make change
 
 Every Tuesday starting on January 16, 2024, new exercise will release.
 Don't know the full plan, but I will be doing some blog post for (some of) these exercises.
-
-## Footnotes
