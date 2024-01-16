@@ -1,0 +1,658 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+
+
+
+Reflecting on #12in23 Challenge | The Tech Tree Blog
+
+
+</title>
+    <meta name="description" content="
+
+A post reviewing my work for Exercism&#x27;s 12in23 Challenge
+
+">
+    
+
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;thetechtreeblog.com/pico.custom.css" media="screen">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;thetechtreeblog.com/gutenberg/gutenberg.css" media="print">
+    <link rel="icon" href="https:&#x2F;&#x2F;thetechtreeblog.com/favicon.ico" sizes="any">
+    <link rel="icon" href="https:&#x2F;&#x2F;thetechtreeblog.com/img/favicon/favicon.svg" type="image/svg+xml" sizes="any">
+    <link rel="apple-touch-icon" href="https:&#x2F;&#x2F;thetechtreeblog.com/img/favicon/favicon-180.png">
+    <link rel="manifest" href="https:&#x2F;&#x2F;thetechtreeblog.com/manifest.json">
+    
+
+
+<meta name="giscus:backlink" content="https://surajssingh.github.io/Tech-Tree-Blog/blog/my-12in23/">
+
+
+
+<script type="module" defer>
+    // Adapted from https://github.com/getzola/zola/issues/1285#issuecomment-870959320
+    for (const ref of document.getElementsByClassName('footnote-reference')) {
+        const hash = ref.children[0].hash.substring(1);
+        const refhash = 'ref:' + hash;
+        ref.id = refhash;
+    }
+
+    for (const footnote of document.getElementsByClassName('footnote-definition')) {
+        const hash = footnote.id;
+        const refhash = 'ref:' + hash;
+        const backlink = document.createElement('a');
+        backlink.href = '#' + refhash;
+        backlink.className = 'footnote-backlink';
+        backlink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline xmlns="http://www.w3.org/2000/svg" points="10 9 15 4 20 9"/><path xmlns="http://www.w3.org/2000/svg" d="M4 20h7a4 4 0 0 0 4-4V4"/>↩</svg>';
+        const paras = footnote.children;
+        const lastPara = paras[paras.length - 1];
+        lastPara.appendChild(backlink);
+    }
+</script>
+
+<script type="module" defer>
+    // Adapted from https://www.roboleary.net/2022/01/13/copy-code-to-clipboard-blog.html
+    const copyButtonLabel = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--contrast)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>';
+    const successCopiedButtonLabel = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--contrast)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-square"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>';
+
+    const successShowSeconds = 10;
+
+    // use a class selector if available
+    let blocks = document.querySelectorAll("pre");
+
+    blocks.forEach((block) => {
+        //        block.setAttribute("tabindex", 0);
+
+        // only add button if browser supports Clipboard API
+        if (navigator.clipboard) {
+            let button = document.createElement("button");
+            button.ariaLabel = "Copy To Clipboard";
+            button.classList.add(["copy-code"]);
+            button.classList.add(["outline"]);
+            button.setAttribute("data-tooltip", "Copy To Clipboard");
+            button.setAttribute("data-placement", "left");
+            button.innerHTML = copyButtonLabel;
+            block.prepend(button);
+
+            button.addEventListener("click", async () => {
+                await copyCode(block, button);
+            });
+        }
+    });
+
+    async function copyCode(block, button) {
+        let code = block.querySelector("code");
+        let text = code.innerHTML
+            .replaceAll(/<span .*?>/g, "")
+            .replaceAll(/<table><tbody><tr><td>\d+<\/td><td>/g, "")
+            .replaceAll(/(<\/mark>)?<\/td><\/tr><tr><td>(<mark>)?\d+(<\/mark>)?<\/td><td>(<mark>)?/g, "")
+            .replaceAll(/<\/td><\/tr><\/tbody><\/table>/g, "")
+            .replaceAll("</span>", "")
+            .replaceAll("&lt;", "<")
+            .replaceAll("&gt;", ">");
+
+        await navigator.clipboard.writeText(text);
+
+        // visual feedback that task is completed
+        button.innerHTML = successCopiedButtonLabel;
+        button.setAttribute("data-tooltip", "Successfully Copied");
+
+        setTimeout(() => {
+            button.innerHTML = copyButtonLabel;
+            button.setAttribute("data-tooltip", "Copy To Clipboard");
+        }, 1000 * successShowSeconds);
+    }
+</script>
+
+
+
+
+  </head>
+
+  <body>
+    <header>
+      
+      <a href="#maincontent" role="button" aria-label="Skip To Main Content" class="outline">Skip To Main</a>
+<nav>
+    <ul>
+        <li>
+            
+
+<a role="img" href='https:&#x2F;&#x2F;thetechtreeblog.com' title='Homepage'
+    data-tooltip='Homepage' data-placement='right'
+    aria-label="Homepage">
+    <title>Homepage</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class=''>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#home' />
+    </svg>
+</a>
+
+        </li>
+    </ul>
+    
+    
+    <ul>
+        
+        
+        <li><a href='https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;'> Blog</a></li>
+        
+        
+        <li><a href='https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;'> Devlogs</a></li>
+        
+    </ul>
+    
+</nav>
+
+<nav aria-label="breadcrumb">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li><a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;">Blog</a>
+        </li>
+        
+        
+        
+        
+        <li><a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;" aria-current="page" tabindex="-1">Reflecting on #12in23 Challenge</a></li>
+        
+    </ul>
+</nav>
+
+
+      
+    </header>
+    <main id="maincontent">
+      <article>
+        
+
+<header>
+ 
+
+<hgroup>
+    <a href="#maincontent">
+        <h1 class="zola-anchor">
+            Reflecting on #12in23 Challenge
+        </h1>
+    </a>
+    
+    <p>A post reviewing my work for Exercism&#x27;s 12in23 Challenge</p>
+    
+</hgroup>
+
+    <details>
+        <summary>Page Details</summary>
+        
+        
+        <p>
+            
+            Author: Suraj S. Singh
+            
+        </p>
+        
+        
+        <p>Word Count: 2330 words</p>
+        
+        <p>
+            
+            
+            <strong>First Created: 2024-01-15</strong>
+            
+            
+            <br />
+            
+        </p>
+        <p>
+            <em>License:
+                
+                <a href='https://creativecommons.org/licenses/by-nc-sa/4.0/'><abbr
+                        title='Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International'>CC BY-NC-SA 4.0<abbr></a>
+                
+            </em>
+        </p>
+        <p>
+        
+            Tags: <br />
+        <dl aria-label="taglist">
+            
+            
+            <dt>
+                <a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;programming-language&#x2F;">
+                    programming-language
+                </a>
+            </dt>
+            
+            
+            
+            
+        </dl>
+        
+        </p>
+    </details>
+</header>
+
+        
+
+
+<nav aria-label="table-of-content">
+    <details>
+        <summary role="button">Table Of Contents</summary>
+        <details open>
+        <summary><a href="https://thetechtreeblog.com/blog/my-12in23/#">Reflecting on #12in23 Challenge</a></summary>
+        <ol>
+            
+                <li>
+                    
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#prior-experience-with-exercism">Prior experience with Exercism</a>
+
+
+                    </li>
+            
+                <li>
+                    
+
+<details open>
+    <summary> <a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#12in23-challenge">12in23 Challenge</a></summary>
+    <ol>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#january">January</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#functional-february">Functional February</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#mechanical-march">Mechanical March</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#analytical-april">Analytical April</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#mindshift-may">Mindshift May</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#summer-of-sexp-june">Summer of Sexp (June)</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#jurassic-july">Jurassic July</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#appy-august">Appy August</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#slim-line-september">Slim-line September</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#object-oriented-october">Object-Oriented October</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#nibbly-november">Nibbly November</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#december">December</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#what-i-learned-from-this-challenge">What I learned from this challenge</a>
+
+</li>
+        
+    </ol>
+</details>
+
+
+                    </li>
+            
+                <li>
+                    
+
+<details open>
+    <summary> <a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#what-s-next">What&#x27;s next</a></summary>
+    <ol>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#comp-lang-comp">Comp Lang Comp</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#48in24-challenge">#48in24 challenge</a>
+
+</li>
+        
+    </ol>
+</details>
+
+
+                    </li>
+            
+                <li>
+                    
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;my-12in23&#x2F;#footnotes">Footnotes</a>
+
+
+                    </li>
+            
+            
+            <li> <a href="#comments">Comments</a></li>
+            
+        </ol>
+        </details>
+        </details>
+</nav>
+
+
+<section id="content">
+<p>This post will go over my experience with the Exercism <a href="https://exercism.org/blog/12in23-calendar">#12in23 Challenge</a> and what will happen next.
+Much of this will be a retrospective of what I remember feeling for each language rather than a walkthrough of my solutions, 
+so expect a more stream of consciousness style of writing.</p>
+<span id="continue-reading"></span><h2 id="prior-experience-with-exercism"><a class="zola-anchor" href="#prior-experience-with-exercism" aria-label="Anchor link for: prior-experience-with-exercism">Prior experience with Exercism</a></h2>
+<p>Before I get into my thoughts through each of the months in the challenge, a bit of background of myself.
+I joined towards the beginning of 2022, as I was looking for some ways to help my students practice programming in Python.
+At the time, I think we would work through some problems together to get a feel for how Python works.</p>
+<p>On my own time, I did some exercises in the C# and F# tracks.
+C# mostly came from refreshing my knowledge for Unity and F# to compare it to a functional programming language.
+The F# exercises transitioned into some Haskell, as one of my Master's courses used Haskell (<a href="https://cs.illinois.edu/academics/courses/cs421">CS 421 - Programming Languages &amp; Compilers</a>).</p>
+<p>However, after that, I didn't really have much time to work on the exercises (mostly due to my coding instructor work ramping up and finishing up my Master's degree).</p>
+<h2 id="12in23-challenge"><a class="zola-anchor" href="#12in23-challenge" aria-label="Anchor link for: 12in23-challenge">12in23 Challenge</a></h2>
+<p>In 2023, I had just graduated, and I was finishing up some student projects.
+I had some free time and wanted to learn more about programming languages.
+Initially, I tried to work on the <a href="https://complangcomp.github.io">Comp Lang Comp</a> project, though I didn't have much motivation to continue due to other commitments.</p>
+<p>Instead, when I learned about the 12in23 Challenge by Exercism, I thought it would be a good way to get exposed to a bunch of languages.
+While there were only 12 themes for the year, so I couldn't deep dive into any one language, it would at least introduce a bunch of different paradigms for me to work through.</p>
+<p>One extra challenge I set for myself was trying to do all the coding inside the Exercism web editor.
+This was more so to try out each of the languages in its simplest form.
+This way, it would require me to read the docs and take notes for how to code.
+It did work for the docs, but I didn't actually have a note-taking system at the time, so that part fell by the wayside.</p>
+<h3 id="january"><a class="zola-anchor" href="#january" aria-label="Anchor link for: january">January</a></h3>
+<p>I did not do much for January since I didn't realize #12in23 had started, so I didn't officially start until February. 
+However, I did a finish a couple of unfinished Haskell exercises and looked into Python for mentoring.
+Besides that, there wasn't much I did for Exercism until February rolled around.</p>
+<h3 id="functional-february"><a class="zola-anchor" href="#functional-february" aria-label="Anchor link for: functional-february">Functional February</a></h3>
+<p>For February, I worked on the <a href="https://exercism.org/tracks/elixir">Elixir track</a> and finished 9 exercises. 
+Originally, I wanted to do Haskell, but I wanted to try out a [BEAM language], since I never really worked with one before.
+This lead me to Elixir and Gleam.
+I eventually settled on Elixir, mostly down to wanting to check out the Phoenix framework (though I didn't actually have the time to create a project with it).</p>
+<p>I liked learning Elixir, especially with it simple syntax and being functional without being too overbearing with types.
+The concept I had the hardest time grasping was <code>atoms</code>, mostly since I had never experienced it from other languages.
+The main thing I got tripped up on was thinking of <code>atoms</code> as variable identifiers, rather than predefined constant.</p>
+<p>The biggest thing I remember for this month was the <a href="https://youtu.be/LknqlTouTKg">Interview with Jose Valim</a>.
+Some ideas brought up were some things I had already considered working through, such as having language cheat sheets and creating objects using regex.</p>
+<h3 id="mechanical-march"><a class="zola-anchor" href="#mechanical-march" aria-label="Anchor link for: mechanical-march">Mechanical March</a></h3>
+<p>For the March theme, I focused on the <a href="https://exercism.org/tracks/rust">Rust track</a>.
+I had some small experience with Rust during my graduate program, specifically with implementing algorithms for my Data Mining course work.
+Beyond that, I wanted to learn more about Rust and thought working through some exercises would help with that.</p>
+<p>For this month, I had a mix of functional programming with some procedural code, which Rust excels at.
+I really loved the way I could chain functions (usually through the Iterator trait), 
+but could always add small imperative elements like mutable variables to help build my solution.
+The hardest problem for me was the <a href="https://exercism.org/tracks/rust/exercises/simple-linked-list">Simple Linked List</a> exercise.
+Mostly that was down to how I needed to conceptualize the <code>Box</code> type and the interaction between the <code>SimpleLinkedList</code> and <code>Node</code>.</p>
+<p>Like you've probably heard from others, Rust is an awesome language to work in.
+Even without help from an IDE, Rust was fairly simple to work in, at least for getting the basics down.
+The compiler also provided great help when I made some simple to fix mistake, and usually guided me towards a working solution.
+For the remaining of 2023, I would continue working on and off in Rust for some projects.</p>
+<h3 id="analytical-april"><a class="zola-anchor" href="#analytical-april" aria-label="Anchor link for: analytical-april">Analytical April</a></h3>
+<p>For April, I did the <a href="https://exercism.org/tracks/julia">Julia track</a>.
+I mostly chose this since I already had some experience in Python and R, and wanted to compare Julia to it.
+For the exercises, I mostly came at it from a Python based approach, which might bias my solutions towards that.
+However, with that, I found Julia to be a more compact Python.
+I especially liked the way lambdas are done in Julia over Python, since it is just an arrow <code>-&gt;</code> away instead of the word <code>lambda</code>.
+Also, I found the idea of Unicode identifier to be really cool to add executable math equations, although I didn't have much of a chance to use that as much.</p>
+<h3 id="mindshift-may"><a class="zola-anchor" href="#mindshift-may" aria-label="Anchor link for: mindshift-may">Mindshift May</a></h3>
+<p>For the month of May, I worked on the <a href="https://exercism.org/tracks/prolog">Prolog track</a>.
+I made this choice mostly to learn about a different declarative paradigm from functional programming.
+Working with Prolog was fairly strange at first, as I had to unlearn my imperative way of thinking.
+For example, learning not to think in assigning variables directly, but having atoms bound to a value based on the logical relations.
+Once I got my head around the concepts, things clicked into place form me.
+The biggest hurdle for me was learning how to use the cut operator correctly.
+However, this month was one of the most rewarding.
+It was the only time in this challenge where I woke up as I was drifting off to sleep to write<sup class="footnote-reference"><a href="#voice-memo">1</a></sup> a solution that popped into my mind.</p>
+<h3 id="summer-of-sexp-june"><a class="zola-anchor" href="#summer-of-sexp-june" aria-label="Anchor link for: summer-of-sexp-june">Summer of Sexp (June)</a></h3>
+<p>For June, I focused on the <a href="https://exercism.org/tracks/clojure">Clojure track</a>.
+I hadn't worked with a LISP dialect before and none of them particularly called to me, 
+so I just chose the one that had I had heard about the most.
+For the most part, nothing seem to be too out of the ordinary for me besides the prefix function/operator application.
+Lisp languages seemed fairly straightforward once you get past the unfamilarity of S-Expressions.</p>
+<p>For this month, I also worked on implementing <a href="https://github.com/kanaka/mal">Make-A-Lisp</a> in <a href="https://github.com/SurajSSingh/make_a_lisp_typed_and_readable">Rust</a>, which is a Clojure inspired Lisp.
+The synergy with this month gave me a better grasp of how Lisps work and some concepts related to language development.</p>
+<h3 id="jurassic-july"><a class="zola-anchor" href="#jurassic-july" aria-label="Anchor link for: jurassic-july">Jurassic July</a></h3>
+<p>For July, I worked through the <a href="https://exercism.org/tracks/c">C track</a> exercises.
+I only knew C from what I vaguely remember from my undergraduate introduction to C++, so I initially was hesitant with how the coding would go.
+However, surprisingly, I found working in C to be really simple once you get the major concepts down.
+It was also interesting to note that: 1) <code>bool</code> type is not built-in, but 2) C actually pointed out that I should include <code>&lt;stdbool.h&gt;</code>.
+I guess I expected C to be more obtuse (though it could just be that I haven't programmed in a large C project).
+Although the language itself doesn't actually provide the safeguards of modern languages, I didn't really run into issues with out-of-bound or off by 1 errors (thanks Rust for baking the borrow checker into my brain, I guess). </p>
+<p>This month, I also finished a bunch more Haskell exercises.</p>
+<h3 id="appy-august"><a class="zola-anchor" href="#appy-august" aria-label="Anchor link for: appy-august">Appy August</a></h3>
+<p>For August, I worked through the <a href="https://exercism.org/tracks/elm">Elm track</a>.
+This was mostly down to trying out something I could use for web app development.
+Considering what I learned from Elixir and Haskell, Elm's functional programming features felt really simple to grasp.
+Just like Rust, I liked the helpful compiler guiding me towards a working solution.
+While I did like working in Elm, I actually settled on Svelte for web development.
+This was mostly since Svelte's HTML-focus templating felt more natural for me.
+However, I will say that Elm's ease of creating type-safe models and functions was much better than TypeScript.</p>
+<p>I also finished a few more exercises for Elixir this month.</p>
+<h3 id="slim-line-september"><a class="zola-anchor" href="#slim-line-september" aria-label="Anchor link for: slim-line-september">Slim-line September</a></h3>
+<p>For September, I worked on the <a href="https://exercism.org/tracks/raku">Raku track</a>.
+I was going between Perl and Raku, and what decided it for me was Raku's parsing tools.
+The hardest part for Raku was figuring out how to work with strings.
+Surprisingly, the regex wasn't that bad, though that could just be how my brain works.
+I would have wanted to spend more time going through the Grammar tool (and especially the named regex to help me with a programming language I am considering creating).</p>
+<h3 id="object-oriented-october"><a class="zola-anchor" href="#object-oriented-october" aria-label="Anchor link for: object-oriented-october">Object-Oriented October</a></h3>
+<p>For October, I focused on <a href="https://exercism.org/tracks/ruby">Ruby</a>.
+I had already had some experience with Java and C#, and Ruby was the only popular object-oriented language I hadn't actually used before.
+Ruby itself was a fairly easy language for me to pick up and nothing felt too out of the ordinary.
+Two things that stood out for me were the native use of regex (which made string search really easy) and the concept of blocks (which felt very much like <a href="https://doc.rust-lang.org/reference/influences.html">Rust's closures</a>).</p>
+<h3 id="nibbly-november"><a class="zola-anchor" href="#nibbly-november" aria-label="Anchor link for: nibbly-november">Nibbly November</a></h3>
+<p>For November, I worked on the <a href="https://exercism.org/tracks/wasm">WASM track</a>.
+The main reason I chose this was to get an idea for working with WebAssembly from other languages like Rust or TypeScript (via <a href="https://www.assemblyscript.org">AssemblyScript</a>).
+I felt it much like C, simple once you got the major concepts down.
+The big thing I struggled with was trying to visualize thinking about strings.
+Since WebAssembly itself only has the concept of numbers, strings are just a series of bytes stored in memory.
+The hard part was figuring out the way memory works in WebAssemby.
+The rest would then be handled by a memory &quot;pointer&quot; (memory offset) and string length, just like C.</p>
+<p>Something I did for this month was work on a <a href="https://github.com/SurajSSingh/WASVD">visual debugger</a> to help understand the stack-based processing.
+This gave a better idea about how WebAssembly is implemented.
+Also, this was the first time I posted in the Exercism Discord, 
+where I listed some helpful resources for working directly in Wasm.
+Overall, it felt nice learning a lower level language and appreciating the affordances provided by higher level ones.</p>
+<h3 id="december"><a class="zola-anchor" href="#december" aria-label="Anchor link for: december">December</a></h3>
+<p>For December, I worked through the <a href="https://exercism.org/tracks/wren">Wren track</a>.
+The big reason I wanted to try Wren was to compare it to Lua.
+For the most part, Wren felt very much like a traditional object-oriented programming language.
+Nothing stood out too much, though that could be because I approach much of the problems from an imperative view.
+Looking at some other solutions, I saw that they were using block like Ruby, and had a more functional style,
+which I should have tried more of.</p>
+<h3 id="what-i-learned-from-this-challenge"><a class="zola-anchor" href="#what-i-learned-from-this-challenge" aria-label="Anchor link for: what-i-learned-from-this-challenge">What I learned from this challenge</a></h3>
+<p>There can be a lot to say about all that I learned throughout this challenge, here are my major takeaways:</p>
+<ol>
+<li>The challenge gave me a focused point to learn a specific language in a good amount of time (enough to understand where to go next).</li>
+<li>I learned and practiced a specific paradigm by language.</li>
+<li>Gave me some inspiration for projects for learning languages (Comp-Lang-Comp and WASVD). </li>
+</ol>
+<p>Here are some things I will try differently moving forward:</p>
+<ol>
+<li>Trying out other kinds of solutions in the same language (Exercism saves different iterations)</li>
+<li>Picking more obscure programming languages to help expand my thinking for programming languages</li>
+<li>Build more projects that support the language I am working in</li>
+</ol>
+<h2 id="what-s-next"><a class="zola-anchor" href="#what-s-next" aria-label="Anchor link for: what-s-next">What's next</a></h2>
+<p>Here's what's next for me after the challenge.</p>
+<h3 id="comp-lang-comp"><a class="zola-anchor" href="#comp-lang-comp" aria-label="Anchor link for: comp-lang-comp">Comp Lang Comp</a></h3>
+<p>In late 2022, I started working on a website to compare a bunch of programming/computer languages syntaxes against each other.
+The key think I wanted to do for this was provide links to resources for learning about the syntaxes from primary sources.
+Originally, I had planned to work on this during the challenge, but time slipped away from me, and I didn't really have time to contribute.</p>
+<p>However, with what I learned and some resources I have found, I still plan to continue working on this.
+The main thing I want to do before opening it up to public contributions is updating the website to make it easier to work with.
+Currently, it is a Slate website, which I mostly chose because it had the side by side code view.
+The only issue was that I didn't really have a good grasp of Ruby to make changes on my own. </p>
+<h3 id="48in24-challenge"><a class="zola-anchor" href="#48in24-challenge" aria-label="Anchor link for: 48in24-challenge">#48in24 challenge</a></h3>
+<p><a href="https://exercism.org/challenges/48in24">#48in24</a> is the successor to the #12in23 challenge.
+Every Tuesday starting on January 16, 2024, a new exercise will be highlighted.
+Don't know the full plan, but I will be doing some blog post for (some of) these exercises.</p>
+<h2 id="footnotes"><a class="zola-anchor" href="#footnotes" aria-label="Anchor link for: footnotes">Footnotes</a></h2>
+<div class="footnote-definition" id="voice-memo"><sup class="footnote-definition-label">1</sup>
+<p>By &quot;write&quot;, I mean make a voice memo, I didn't want to ruin my sleep by getting my laptop and coding something in the middle of the night.</p>
+</div>
+
+</section>
+
+
+        
+<footer id="bottom-aside">
+ 
+
+
+<hgroup>
+    <h2 id="comments"> <a href="#comments" class="zola-anchor">Comment Section</a></h2>
+    <p>
+        <strong>Powered by Giscus</strong>
+        </p>
+        <p>
+            <small><em>Note: You can go directly to GitHub Discussion at <a
+                        href="https://github.com/SurajSSingh/Tech-Tree-Blog/discussions/">https://github.com/SurajSSingh/Tech-Tree-Blog/discussions/</a>
+                    to comment</em></small>
+    </p>
+</hgroup>
+<script src="https://giscus.app/client.js" data-repo="SurajSSingh/Tech-Tree-Blog" data-repo-id="R_kgDOICIt2g"
+    data-category="Comments"
+    data-category-id="DIC_kwDOICIt2s4CTop9" data-mapping="title" data-strict="1" data-reactions-enabled="1"
+    data-emit-metadata="0" data-input-position="top" data-theme="preferred_color_scheme" data-lang="en" data-loading="lazy"
+    crossorigin="anonymous" async>
+    </script>
+<noscript>
+    <p>Comments cannot be rendered</p>
+</noscript>
+
+</footer>
+
+      </article>
+    </main>
+    <footer>
+      
+      
+
+
+
+<a role="img" href='https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;atom.xml' title='Atom Feed'
+    data-tooltip='Atom Feed' data-placement='top'
+    aria-label="Atom Feed">
+    <title>Atom Feed</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class=''>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#rss' />
+    </svg>
+</a>
+
+
+
+
+
+
+
+
+
+
+
+<a role="img" href='https:&#x2F;&#x2F;github.com&#x2F;SurajSSingh&#x2F;' title='GitHub'
+    data-tooltip='GitHub' data-placement='top'
+    aria-label="GitHub">
+    <title>GitHub</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class='feather'>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#github' />
+    </svg>
+</a>
+
+
+
+
+
+
+
+
+
+
+<a role="img" href='https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;suraj-s-singh&#x2F;' title='Linkedin'
+    data-tooltip='Linkedin' data-placement='top'
+    aria-label="Linkedin">
+    <title>Linkedin</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class='feather'>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#linkedin' />
+    </svg>
+</a>
+
+
+<p>© 2023 <a href="https://surajssingh.github.io">Suraj S. Singh</a></p>
+<p> Created with <a href="https://www.getzola.org/">Zola</a>, <a href="https://picocss.com/">Pico.CSS</a>, and <a
+        href="https://feathericons.com"> Feather Icons</a>.</p>
+<p>Hosted on <a href="https://github.com/surajssingh/Tech-Tree-Blog">GitHub</a>.</p>
+      
+    </footer>
+  </body>
+
+</html>

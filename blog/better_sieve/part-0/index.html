@@ -1,0 +1,706 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+
+
+
+Part 0: Background and Intro | The Tech Tree Blog
+
+
+</title>
+    <meta name="description" content="
+
+Background information about sieving process and an introduction to the coding idea.
+
+">
+    
+
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;thetechtreeblog.com/pico.custom.css" media="screen">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;thetechtreeblog.com/gutenberg/gutenberg.css" media="print">
+    <link rel="icon" href="https:&#x2F;&#x2F;thetechtreeblog.com/favicon.ico" sizes="any">
+    <link rel="icon" href="https:&#x2F;&#x2F;thetechtreeblog.com/img/favicon/favicon.svg" type="image/svg+xml" sizes="any">
+    <link rel="apple-touch-icon" href="https:&#x2F;&#x2F;thetechtreeblog.com/img/favicon/favicon-180.png">
+    <link rel="manifest" href="https:&#x2F;&#x2F;thetechtreeblog.com/manifest.json">
+    
+
+
+<meta name="giscus:backlink" content="https://surajssingh.github.io/Tech-Tree-Blog/blog/better_sieve/part-0/">
+
+
+
+<script type="module" defer>
+    // Adapted from https://github.com/getzola/zola/issues/1285#issuecomment-870959320
+    for (const ref of document.getElementsByClassName('footnote-reference')) {
+        const hash = ref.children[0].hash.substring(1);
+        const refhash = 'ref:' + hash;
+        ref.id = refhash;
+    }
+
+    for (const footnote of document.getElementsByClassName('footnote-definition')) {
+        const hash = footnote.id;
+        const refhash = 'ref:' + hash;
+        const backlink = document.createElement('a');
+        backlink.href = '#' + refhash;
+        backlink.className = 'footnote-backlink';
+        backlink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline xmlns="http://www.w3.org/2000/svg" points="10 9 15 4 20 9"/><path xmlns="http://www.w3.org/2000/svg" d="M4 20h7a4 4 0 0 0 4-4V4"/>↩</svg>';
+        const paras = footnote.children;
+        const lastPara = paras[paras.length - 1];
+        lastPara.appendChild(backlink);
+    }
+</script>
+
+<script type="module" defer>
+    // Adapted from https://www.roboleary.net/2022/01/13/copy-code-to-clipboard-blog.html
+    const copyButtonLabel = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--contrast)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>';
+    const successCopiedButtonLabel = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--contrast)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-square"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>';
+
+    const successShowSeconds = 10;
+
+    // use a class selector if available
+    let blocks = document.querySelectorAll("pre");
+
+    blocks.forEach((block) => {
+        //        block.setAttribute("tabindex", 0);
+
+        // only add button if browser supports Clipboard API
+        if (navigator.clipboard) {
+            let button = document.createElement("button");
+            button.ariaLabel = "Copy To Clipboard";
+            button.classList.add(["copy-code"]);
+            button.classList.add(["outline"]);
+            button.setAttribute("data-tooltip", "Copy To Clipboard");
+            button.setAttribute("data-placement", "left");
+            button.innerHTML = copyButtonLabel;
+            block.prepend(button);
+
+            button.addEventListener("click", async () => {
+                await copyCode(block, button);
+            });
+        }
+    });
+
+    async function copyCode(block, button) {
+        let code = block.querySelector("code");
+        let text = code.innerHTML
+            .replaceAll(/<span .*?>/g, "")
+            .replaceAll(/<table><tbody><tr><td>\d+<\/td><td>/g, "")
+            .replaceAll(/(<\/mark>)?<\/td><\/tr><tr><td>(<mark>)?\d+(<\/mark>)?<\/td><td>(<mark>)?/g, "")
+            .replaceAll(/<\/td><\/tr><\/tbody><\/table>/g, "")
+            .replaceAll("</span>", "")
+            .replaceAll("&lt;", "<")
+            .replaceAll("&gt;", ">");
+
+        await navigator.clipboard.writeText(text);
+
+        // visual feedback that task is completed
+        button.innerHTML = successCopiedButtonLabel;
+        button.setAttribute("data-tooltip", "Successfully Copied");
+
+        setTimeout(() => {
+            button.innerHTML = copyButtonLabel;
+            button.setAttribute("data-tooltip", "Copy To Clipboard");
+        }, 1000 * successShowSeconds);
+    }
+</script>
+
+
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"
+    integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+    integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload='renderMathInElement(document.body,{delimiters:[
+  {left: "$$", right: "$$", display: true},
+  {left: "$", right: "$", display: false},
+  {left: "\\(", right: "\\)", display: false},
+  {left: "\\[", right: "\\]", display: true}
+]});'></script>
+
+
+  </head>
+
+  <body>
+    <header>
+      
+      <a href="#maincontent" role="button" aria-label="Skip To Main Content" class="outline">Skip To Main</a>
+<nav>
+    <ul>
+        <li>
+            
+
+<a role="img" href='https:&#x2F;&#x2F;thetechtreeblog.com' title='Homepage'
+    data-tooltip='Homepage' data-placement='right'
+    aria-label="Homepage">
+    <title>Homepage</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class=''>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#home' />
+    </svg>
+</a>
+
+        </li>
+    </ul>
+    
+    
+    <ul>
+        
+        
+        <li><a href='https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;'> Blog</a></li>
+        
+        
+        <li><a href='https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;'> Devlogs</a></li>
+        
+    </ul>
+    
+</nav>
+
+<nav aria-label="breadcrumb">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li><a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;">Blog</a>
+        </li>
+        
+        
+        
+        
+        
+        
+        <li><a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;better_sieve&#x2F;">A Better Sieve</a>
+        </li>
+        
+        
+        
+        
+        <li><a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;better_sieve&#x2F;part-0&#x2F;" aria-current="page" tabindex="-1">Part 0: Background and Intro</a></li>
+        
+    </ul>
+</nav>
+
+
+      
+    </header>
+    <main id="maincontent">
+      <article>
+        
+
+<header>
+ 
+
+<hgroup>
+    <a href="#maincontent">
+        <h1 class="zola-anchor">
+            Part 0: Background and Intro
+        </h1>
+    </a>
+    
+    <p>Background information about sieving process and an introduction to the coding idea.</p>
+    
+</hgroup>
+
+    <details>
+        <summary>Page Details</summary>
+        
+        
+        <p>
+            
+            Author: Suraj S. Singh
+            
+        </p>
+        
+        
+        <p>Word Count: 2279 words</p>
+        
+        <p>
+            
+            
+            First Created: 2023-03-25
+            
+            
+            <br />
+            
+            <strong>Latest Update: 2023-03-29</strong>
+            
+        </p>
+        <p>
+            <em>License:
+                
+                <a href='https://creativecommons.org/licenses/by-nc-sa/4.0/'><abbr
+                        title='Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International'>CC BY-NC-SA 4.0<abbr></a>
+                
+            </em>
+        </p>
+        <p>
+        
+            Tags: <br />
+        <dl aria-label="taglist">
+            
+            
+            <dt>
+                <a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;programming-language&#x2F;">
+                    programming-language
+                </a>
+            </dt>
+            
+            
+            <dd>
+                <a href="https://thetechtreeblog.com/programming-language/python/">python</a>
+            </dd>
+            
+            
+            
+        </dl>
+        
+        </p>
+    </details>
+</header>
+
+        
+
+
+<nav aria-label="table-of-content">
+    <details>
+        <summary role="button">Table Of Contents</summary>
+        <details open>
+        <summary><a href="https://thetechtreeblog.com/blog/better_sieve/part-0/#">Part 0: Background and Intro</a></summary>
+        <ol>
+            
+                <li>
+                    
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;better_sieve&#x2F;part-0&#x2F;#starting-with-the-sieve-of-eratosthenes">Starting with the Sieve of Eratosthenes</a>
+
+
+                    </li>
+            
+                <li>
+                    
+
+<details open>
+    <summary> <a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;better_sieve&#x2F;part-0&#x2F;#what-do-i-want-to-do">What do I want to do?</a></summary>
+    <ol>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;better_sieve&#x2F;part-0&#x2F;#motivation">Motivation</a>
+
+</li>
+        
+    </ol>
+</details>
+
+
+                    </li>
+            
+                <li>
+                    
+
+<details open>
+    <summary> <a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;better_sieve&#x2F;part-0&#x2F;#current-idea">Current Idea</a></summary>
+    <ol>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;better_sieve&#x2F;part-0&#x2F;#noticed-properties">Noticed Properties</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;better_sieve&#x2F;part-0&#x2F;#example-code">Example Code</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;better_sieve&#x2F;part-0&#x2F;#a-starting-point">A starting point</a>
+
+</li>
+        
+    </ol>
+</details>
+
+
+                    </li>
+            
+                <li>
+                    
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;better_sieve&#x2F;part-0&#x2F;#footnotes">Footnotes</a>
+
+
+                    </li>
+            
+            
+            <li> <a href="#comments">Comments</a></li>
+            
+        </ol>
+        </details>
+        </details>
+</nav>
+
+
+<section id="content">
+<p>This post provides some background information about my plan to build a better sieve through Python generators.
+It will go over the Sieve of Eratosthenes, what I plan to do, and some ideas for going about implementing it.
+As a baseline, one should have an understanding of prime numbers and be able to understand Python code.</p>
+<span id="continue-reading"></span><h2 id="starting-with-the-sieve-of-eratosthenes"><a class="zola-anchor" href="#starting-with-the-sieve-of-eratosthenes" aria-label="Anchor link for: starting-with-the-sieve-of-eratosthenes">Starting with the Sieve of Eratosthenes</a></h2>
+<p>One simple way of generating prime numbers is to use the Sieve of Eratosthenes algorithm. 
+The idea is to start with a list of all numbers starting from 2 and going up to some given number.
+Each number in the list is assigned to true initially.
+Then, loop through each number and mark off all multiples of that number (except itself).
+Once you have gone through each of the numbers, go through the list again and keep only those numbers that are still true.
+This now contains all the prime numbers up to some given number, as any number that has factors beyond 1 and itself will be marked off during the first looping process.</p>
+<p>Here is a simple example in Python:</p>
+<pre data-linenos data-lang="python" class="language-python z-code"><code class="language-python" data-lang="python"><table><tbody><tr><td>1</td><td><span class="z-source z-python"><span class="z-meta z-function z-python"><span class="z-storage z-type z-function z-python"><span class="z-keyword z-declaration z-function z-python">def</span></span> <span class="z-entity z-name z-function z-python"><span class="z-meta z-generic-name z-python">sieve_of_eratosthenes</span></span></span><span class="z-meta z-function z-parameters z-python"><span class="z-punctuation z-section z-parameters z-begin z-python">(</span></span><span class="z-meta z-function z-parameters z-python"><span class="z-variable z-parameter z-python">final_number</span></span><span class="z-meta z-function z-parameters z-annotation z-python"><span class="z-punctuation z-separator z-annotation z-parameter z-python">:</span> <span class="z-meta z-qualified-name z-python"><span class="z-support z-type z-python">int</span></span> </span><span class="z-meta z-function z-parameters z-default-value z-python"><span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-constant z-numeric z-integer z-decimal z-python">100</span></span><span class="z-meta z-function z-parameters z-python"><span class="z-punctuation z-section z-parameters z-end z-python">)</span></span><span class="z-meta z-function z-python"> </span><span class="z-meta z-function z-annotation z-return z-python"><span class="z-punctuation z-separator z-annotation z-return z-python">-&gt;</span> <span class="z-meta z-item-access z-python"><span class="z-meta z-qualified-name z-python"><span class="z-support z-type z-python">list</span></span></span><span class="z-meta z-item-access z-python"><span class="z-punctuation z-section z-brackets z-begin z-python">[</span></span><span class="z-meta z-item-access z-arguments z-python"><span class="z-meta z-qualified-name z-python"><span class="z-support z-type z-python">int</span></span></span><span class="z-meta z-item-access z-python"><span class="z-punctuation z-section z-brackets z-end z-python">]</span></span></span><span class="z-meta z-function z-python"><span class="z-punctuation z-section z-function z-begin z-python">:</span></span>
+</td></tr><tr><td>2</td><td>    <span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> Special case: No prime less than 2 -&gt; empty list
+</span></td></tr><tr><td>3</td><td>    <span class="z-meta z-statement z-conditional z-if z-python"><span class="z-keyword z-control z-conditional z-if z-python">if</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">final_number</span></span> <span class="z-keyword z-operator z-comparison z-python">&lt;</span> <span class="z-constant z-numeric z-integer z-decimal z-python">2</span><span class="z-punctuation z-section z-block z-conditional z-if z-python">:</span></span>
+</td></tr><tr><td>4</td><td>        <span class="z-keyword z-control z-flow z-return z-python">return</span> <span class="z-meta z-sequence z-list z-empty z-python"><span class="z-punctuation z-section z-sequence z-begin z-python">[</span><span class="z-punctuation z-section z-sequence z-end z-python">]</span></span>
+</td></tr><tr><td>5</td><td>
+</td></tr><tr><td>6</td><td>    <span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> Final number is +1 since Python is 0-indexed 
+</span></td></tr><tr><td>7</td><td>    <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">final_number</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">final_number</span></span> <span class="z-keyword z-operator z-arithmetic z-python">+</span> <span class="z-constant z-numeric z-integer z-decimal z-python">1</span>
+</td></tr><tr><td>8</td><td>
+</td></tr><tr><td>9</td><td>    <span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> Create a number list with all positions from 0 up to final number set to True.
+</span></td></tr><tr><td>10</td><td>    <span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> This assumes all numbers are prime, which will be refuted in the loop below.
+</span></td></tr><tr><td>11</td><td>    <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">number_check_list</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-meta z-sequence z-list z-python"><span class="z-punctuation z-section z-sequence z-begin z-python">[</span><span class="z-constant z-language z-python">True</span><span class="z-punctuation z-section z-sequence z-end z-python">]</span></span> <span class="z-keyword z-operator z-arithmetic z-python">*</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">final_number</span></span>
+</td></tr><tr><td>12</td><td>    
+</td></tr><tr><td>13</td><td>    <span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> Known: 0 and 1 are not prime
+</span></td></tr><tr><td>14</td><td>    <span class="z-meta z-item-access z-python"><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">number_check_list</span></span></span><span class="z-meta z-item-access z-python"><span class="z-punctuation z-section z-brackets z-begin z-python">[</span></span><span class="z-meta z-item-access z-arguments z-python"><span class="z-constant z-numeric z-integer z-decimal z-python">0</span></span><span class="z-meta z-item-access z-python"><span class="z-punctuation z-section z-brackets z-end z-python">]</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-constant z-language z-python">False</span>
+</td></tr><tr><td>15</td><td>    <span class="z-meta z-item-access z-python"><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">number_check_list</span></span></span><span class="z-meta z-item-access z-python"><span class="z-punctuation z-section z-brackets z-begin z-python">[</span></span><span class="z-meta z-item-access z-arguments z-python"><span class="z-constant z-numeric z-integer z-decimal z-python">1</span></span><span class="z-meta z-item-access z-python"><span class="z-punctuation z-section z-brackets z-end z-python">]</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-constant z-language z-python">False</span>
+</td></tr><tr><td>16</td><td>
+</td></tr><tr><td>17</td><td>    <span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> For every number starting at 2 (inclusive) going to final number (exclusive)
+</span></td></tr><tr><td>18</td><td>    <span class="z-meta z-statement z-loop z-for z-python"><span class="z-keyword z-control z-loop z-for z-python">for</span> <span class="z-meta z-generic-name z-python">number</span> <span class="z-keyword z-control z-loop z-for z-in z-python">in</span></span><span class="z-meta z-statement z-loop z-for z-python"> <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">range</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-constant z-numeric z-integer z-decimal z-python">2</span><span class="z-punctuation z-separator z-arguments z-python">,</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">final_number</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span></span><span class="z-meta z-statement z-loop z-for z-python"><span class="z-punctuation z-section z-block z-loop z-for z-python">:</span></span>
+</td></tr><tr><td>19</td><td>        <span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> For every multiple of the number except itself up to the final number 
+</span></td></tr><tr><td>20</td><td>        <span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> (i.e. n*2, n*3, n*4, ...)
+</span></td></tr><tr><td>21</td><td>        <span class="z-meta z-statement z-loop z-for z-python"><span class="z-keyword z-control z-loop z-for z-python">for</span> <span class="z-meta z-generic-name z-python">multiple</span> <span class="z-keyword z-control z-loop z-for z-in z-python">in</span></span><span class="z-meta z-statement z-loop z-for z-python"> <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">range</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">number</span></span><span class="z-keyword z-operator z-arithmetic z-python">*</span><span class="z-constant z-numeric z-integer z-decimal z-python">2</span><span class="z-punctuation z-separator z-arguments z-python">,</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">final_number</span></span><span class="z-punctuation z-separator z-arguments z-python">,</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">number</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span></span><span class="z-meta z-statement z-loop z-for z-python"><span class="z-punctuation z-section z-block z-loop z-for z-python">:</span></span>
+</td></tr><tr><td>22</td><td>            <span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> Set that number to false (since one of it&#39;s factor is this number)
+</span></td></tr><tr><td>23</td><td>            <span class="z-meta z-item-access z-python"><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">number_check_list</span></span></span><span class="z-meta z-item-access z-python"><span class="z-punctuation z-section z-brackets z-begin z-python">[</span></span><span class="z-meta z-item-access z-arguments z-python"><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">offset</span></span></span><span class="z-meta z-item-access z-python"><span class="z-punctuation z-section z-brackets z-end z-python">]</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-constant z-language z-python">False</span>
+</td></tr><tr><td>24</td><td>
+</td></tr><tr><td>25</td><td>    <span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> Return a list that keeps only number whose value is true.
+</span></td></tr><tr><td>26</td><td>    <span class="z-keyword z-control z-flow z-return z-python">return</span> <span class="z-meta z-sequence z-list z-python"><span class="z-punctuation z-section z-sequence z-begin z-python">[</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">number</span></span> <span class="z-meta z-expression z-generator z-python"><span class="z-keyword z-control z-loop z-for z-generator z-python">for</span> <span class="z-meta z-generic-name z-python">number</span><span class="z-punctuation z-separator z-target-list z-python">,</span> <span class="z-meta z-generic-name z-python">is_prime</span> <span class="z-keyword z-control z-loop z-for z-in z-python">in</span></span> <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">enumerate</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">number_check_list</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span> <span class="z-keyword z-control z-conditional z-if z-python">if</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">is_prime</span></span><span class="z-punctuation z-section z-sequence z-end z-python">]</span></span>
+</td></tr></span></tbody></table></code></pre>
+<p><em>Note: There are many different ways of making this more efficient such as starting with offset 2 for indices (there are no primes less than 2<sup class="footnote-reference"><a href="#negative-primes-footnote">1</a></sup>), skipping numbers that are already marked off (as their multiple are already known not to be primes from the previous steps), and stopping at the square root of the final number (since all composite numbers between the square root and final number will have been marked off at prior steps). This example tries to keep the algorithm simple without any deeper mathematical proof required.</em></p>
+<h2 id="what-do-i-want-to-do"><a class="zola-anchor" href="#what-do-i-want-to-do" aria-label="Anchor link for: what-do-i-want-to-do">What do I want to do?</a></h2>
+<p>The main problem here is that the function has to hold all numbers before marking them off. 
+This is especially bad for very large numbers as most numbers at that scale are composite.
+We know that at minimum, half the numbers will not be prime (as they are even and thus divisible by 2).
+This can be managed by using a segmented variant of the sieve, which builds the list in pieces.</p>
+<p>Another issue is the need to process all the numbers first before they can be used.
+However, Python provides generators to allow yielding values while they are being generated, allowing one to stream the numbers in and process them immediately.
+By using generators, the function only needs to process data as it is generated, allowing for early stopping.</p>
+<p>With this, I will endeavor to create a better kind of sieve that can mark off items while being generated.
+The idea should be to iteratively create a generator whose value will always return a prime when calling next on it (at least up to a point).
+The primary metric to compare this solution to the Sieve of Eratosthenes is compactness (i.e. how much less memory is needed for the solution).</p>
+<h3 id="motivation"><a class="zola-anchor" href="#motivation" aria-label="Anchor link for: motivation">Motivation</a></h3>
+<p>So, how did I come to think about this idea?
+Well, I was working on the <a href="https://exercism.org/tracks/rust/exercises/sieve">Sieve exercise for Rust</a> on <a href="https://exercism.org">Exercism</a>. 
+In my <a href="https://exercism.org/tracks/rust/exercises/sieve/solutions/LightWithClocks">first iteration</a>, I didn’t fully read the instructions correctly and implemented it as an iterator that calculates prime numbers by modding each current number with all previously found primes and checking if all are not 0 (evenly divisible).</p>
+<p>When I went to redo the question for the second iteration, I used the <code>step_by</code> function to skip over multiples of a given value.
+Since the step_by function itself is iterable, it gave me an idea to see if I could chain a bunch of <code>step_by</code> functions together and yield primes that way.
+If you see my second iteration for the solution, I did <em>not</em> implement that, but it did provide a seed for starting to think about such a solution.</p>
+<h2 id="current-idea"><a class="zola-anchor" href="#current-idea" aria-label="Anchor link for: current-idea">Current Idea</a></h2>
+<p>The idea for this new sieve is to start with a range of natural numbers stepping by 1 and somehow remove factors of a given prime by skipping over them to produce a next new range. At each successive step, the range is refined to only include primes and composites that don't hold any previous primes as factors. </p>
+<p>As an example, let's start with all the Natural numbers, which will be our first range (<code>range_0</code>). 
+$$\mathbb{N} = range_0 = [0,1,2,3,4,5,6,7,8,9,10,...]$$</p>
+<p>To begin the algorithm, we will remove $0$ and $1$. 
+This means skipping the first two numbers and then continuing with the remaining range, which will yield the second range (<code>range_1</code>).
+$$range_0.skip(2) = range_1 = [2,3,4,5,6,7,8,9,10,11,12,...]$$</p>
+<p>Then, we start the algorithm proper.
+In the beginning, we take the first number as prime and then somehow remove all its multiples.
+In this case it's $2$ (which is the first prime) and to get rid of any multiple of $2$, we skip over them.
+For $2$, we just need to skip every other number after $2$ (i.e. keep next, skip after). 
+The result will look something like this (range_2).
+$$range_1.skip(1).keeper(cycle([1])) = range_2 = [3,5,7,9,11,13,15,17,19,21...]$$</p>
+<p>2 Notes:</p>
+<ol>
+<li>I assume that we already take the first value out before the <code>skip</code> function runs. Otherwise, we would lose the prime after we just calculated it in the range. This means the range just holds what remains to be calculated, not the entire prime list. This is fine, since our function is a generator, and will yield the first value out.</li>
+<li>The <code>keeper</code> function works by taking a pattern of items to keep and skipping over when the keep pattern changes. This is why <code>cycle([1])</code> is needed, as we need to keep 1 number, then skip over the next, and then repeat this for the entire range.</li>
+</ol>
+<p>Now we loop back to the beginning step. 
+We take the first number as prime, which is $3$, and get rid of its multiples.
+But, notice that some multiples of $3$ were removed in the previous step, namely all even multiples (divisible by $2$, the prior prime).
+This means we need to skip all multiples of $3$ that are not multiples of $2$.</p>
+<p>Fortunately, removing the evens did not change the number we need to skip by.
+All multiples of $3$ are separated by 3 in <code>range_1</code> and also separated by 3 in <code>range_2</code>.
+For example, every multiple 3 in the full range is separated by 3 (should be obvious, since it is a multiple of 3).
+When we remove the even numbers, all multiples are now separated by 6 (e.g. 3 -&gt; 9, 9 -&gt; 15, 15 -&gt; 21, etc.).
+However, removing even numbers also removes half the numbers between the multiples, so 6 becomes 3.</p>
+<p>Thus, we need just need to repeatedly keep every 2 numbers and skip once to produce the next range (<code>range_3</code>). 
+$$range_2.skip(1).keeper(cycle([2])) = range_3 = [5,7,11,13,17,19,23,25,29,31,...]$$</p>
+<p>Let's do one more run through the loop (this one is a bit more interesting).
+The next first number is $5$ and now we need to get rid of all multiples of $5$ not divisible by $2$ and $3$.
+Let's consider what those numbers are: 
+$$[5,25,35,55,65,85,95, ...]$$.
+The numbers appear to follow a [<strong>+20</strong>, <strong>+10</strong>, <strong>+20</strong>, <strong>+10</strong>, ...] cyclic pattern.
+Not only that, but the remaining numbers in-between also appear to follow a similar cyclic pattern: 
+$$[\textbf{5},7,11,13,17,19,23,\textbf{25},29,31,\textbf{35},37,41,43,47,49,53,\textbf{55},59,61,\textbf{65},...]$$.
+This pattern is: [keep 6, skip 1, keep 2, skip 1] repeated forever (to my current knowledge).
+This produces the final range we will look at <code>range_4</code>.
+$$range_3.skip(1).keeper(cycle([6,2])) = range_4 = [7,11,13,17,19,23,29,31,37,41,43,47...]$$</p>
+<p>This calculation states to skip the first number ($5$), then keep the next 6 numbers (i.e. $7,11,13,17,19,23$), skip the next number ($25$), then keep 2 more numbers (i.e. $29, 31$), skip 1 ($35$), and then repeat the keep 6, skip 1, keep 2, skip 1 step.</p>
+<p>We would keep running this until the largest prime up to some final number is found or after we stop yielding more value.</p>
+<h3 id="noticed-properties"><a class="zola-anchor" href="#noticed-properties" aria-label="Anchor link for: noticed-properties">Noticed Properties</a></h3>
+<p>One thing to notice is that during the processing of the range, all numbers between the first prime <code>p</code> and its square <code>p^2</code> are prime. 
+This should make sense as any composite number with factors below <code>p</code> would have been removed in previous steps, and the first composite must be some multiple of <code>p</code> that does not share any factor in common with any primes below. 
+The first number that satisfies that is <code>p^2</code>.
+This can help improve the stopping condition, since if we know the final number to generate, we can stop processing once we have a prime at least as large as the final number. </p>
+<p>Another thing to notice is that skipping will not always be consistently the same number, as seen with <code>range_4</code> using $5$ to calculate. 
+I don't know if there is a specific name in mathematics for this concept, but the idea is similar to a <code>step_by</code> function which can dynamically change.
+To allow for this, I use a helper function to allow cyclically keeping a set of values and then skipping one next value.</p>
+<p>As for the pattern, finding what list of keeps and skips satisfies the range mathematically is a bit outside my scope of knowledge.
+Instead, one way to find the pattern would be to calculate how many numbers are in-between two (remaining) multiples and look for when this pattern of gaps repeats.
+Although this requires copying the currently running generator to retrieve those values and waiting until the pattern repeats (which can be very wasteful), this is the current approach I took for my coding attempts. 
+I hope to eventually use what I learn from the attempts to find the pattern either empirically with some function or mathematically with a formula.</p>
+<h3 id="example-code"><a class="zola-anchor" href="#example-code" aria-label="Anchor link for: example-code">Example Code</a></h3>
+<p>Given some <code>BIG_NUMBER</code>, I want to find all the primes up to that big number and <strong>yield</strong> the values as they are found. 
+The function for this should be a generator to be used like so:</p>
+<pre data-linenos data-lang="python" class="language-python z-code"><code class="language-python" data-lang="python"><table><tbody><tr><td>1</td><td><span class="z-source z-python"><span class="z-meta z-statement z-loop z-for z-python"><span class="z-keyword z-control z-loop z-for z-python">for</span> <span class="z-meta z-generic-name z-python">prime</span> <span class="z-keyword z-control z-loop z-for z-in z-python">in</span></span><span class="z-meta z-statement z-loop z-for z-python"> <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-meta z-generic-name z-python">prime_generating_sieve</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-variable z-other z-constant z-python">BIG_NUMBER</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span></span><span class="z-meta z-statement z-loop z-for z-python"><span class="z-punctuation z-section z-block z-loop z-for z-python">:</span></span>
+</td></tr><tr><td>2</td><td>    <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">print</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">prime</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span>
+</td></tr><tr><td>3</td><td>
+</td></tr><tr><td>4</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> prints out: 2, 3, 5, 7, 11, 13, 17, 19, ...
+</span></td></tr></span></tbody></table></code></pre>
+<p>This can allow efficient stopping before reaching the end:</p>
+<pre data-linenos data-lang="python" class="language-python z-code"><code class="language-python" data-lang="python"><table><tbody><tr><td>1</td><td><span class="z-source z-python"><span class="z-meta z-statement z-loop z-for z-python"><span class="z-keyword z-control z-loop z-for z-python">for</span> <span class="z-meta z-generic-name z-python">prime</span> <span class="z-keyword z-control z-loop z-for z-in z-python">in</span></span><span class="z-meta z-statement z-loop z-for z-python"> <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-meta z-generic-name z-python">prime_generating_sieve</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-variable z-other z-constant z-python">BIG_NUMBER</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span></span><span class="z-meta z-statement z-loop z-for z-python"><span class="z-punctuation z-section z-block z-loop z-for z-python">:</span></span>
+</td></tr><tr><td>2</td><td>    <span class="z-meta z-statement z-conditional z-if z-python"><span class="z-keyword z-control z-conditional z-if z-python">if</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">prime</span></span> <span class="z-keyword z-operator z-comparison z-python">&lt;</span> <span class="z-constant z-numeric z-integer z-decimal z-python">10</span><span class="z-punctuation z-section z-block z-conditional z-if z-python">:</span></span>
+</td></tr><tr><td>3</td><td>        <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">print</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">prime</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span>
+</td></tr><tr><td>4</td><td>    <span class="z-meta z-statement z-conditional z-else z-python"><span class="z-keyword z-control z-conditional z-else z-python">else</span><span class="z-punctuation z-section z-block z-conditional z-else z-python">:</span></span>
+</td></tr><tr><td>5</td><td>        <span class="z-keyword z-control z-flow z-break z-python">break</span>
+</td></tr><tr><td>6</td><td>
+</td></tr><tr><td>7</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> prints out: 2, 3, 5, 7
+</span></td></tr></span></tbody></table></code></pre>
+<p>It can also be possible to resume the iterator at a later time:</p>
+<pre data-linenos data-lang="python" class="language-python z-code"><code class="language-python" data-lang="python"><table><tbody><tr><td>1</td><td><span class="z-source z-python"><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">prime_generator</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-meta z-generic-name z-python">prime_generating_sieve</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-variable z-other z-constant z-python">BIG_NUMBER</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span>
+</td></tr><tr><td>2</td><td>
+</td></tr><tr><td>3</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> Previous prime needed as we need to call next on generator 
+</span></td></tr><tr><td>4</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> before we can check the value, which consume it in the iterator.
+</span></td></tr><tr><td>5</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> Might be better if we could peek the value before consuming it.
+</span></td></tr><tr><td>6</td><td><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">previous_prime</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-constant z-language z-python">None</span>
+</td></tr><tr><td>7</td><td>
+</td></tr><tr><td>8</td><td><span class="z-meta z-statement z-loop z-for z-python"><span class="z-keyword z-control z-loop z-for z-python">for</span> <span class="z-meta z-generic-name z-python">prime</span> <span class="z-keyword z-control z-loop z-for z-in z-python">in</span></span><span class="z-meta z-statement z-loop z-for z-python"> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">prime_generator</span></span></span><span class="z-meta z-statement z-loop z-for z-python"><span class="z-punctuation z-section z-block z-loop z-for z-python">:</span></span>
+</td></tr><tr><td>9</td><td>    <span class="z-meta z-statement z-conditional z-if z-python"><span class="z-keyword z-control z-conditional z-if z-python">if</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">prime</span></span> <span class="z-keyword z-operator z-comparison z-python">&lt;</span> <span class="z-constant z-numeric z-integer z-decimal z-python">10</span><span class="z-punctuation z-section z-block z-conditional z-if z-python">:</span></span>
+</td></tr><tr><td>10</td><td>        <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">print</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">prime</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span>
+</td></tr><tr><td>11</td><td>    <span class="z-meta z-statement z-conditional z-else z-python"><span class="z-keyword z-control z-conditional z-else z-python">else</span><span class="z-punctuation z-section z-block z-conditional z-else z-python">:</span></span>
+</td></tr><tr><td>12</td><td>        <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">previous_prime</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">prime</span></span>
+</td></tr><tr><td>13</td><td>        <span class="z-keyword z-control z-flow z-break z-python">break</span>
+</td></tr><tr><td>14</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> prints out: 2, 3, 5, 7
+</span></td></tr><tr><td>15</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> previous prime become 11
+</span></td></tr><tr><td>16</td><td>
+</td></tr><tr><td>17</td><td><span class="z-meta z-statement z-conditional z-if z-python"><span class="z-keyword z-control z-conditional z-if z-python">if</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">previous_prime</span></span> <span class="z-keyword z-operator z-logical z-python">is</span> <span class="z-keyword z-operator z-logical z-python">not</span> <span class="z-constant z-language z-python">None</span><span class="z-punctuation z-section z-block z-conditional z-if z-python">:</span></span>
+</td></tr><tr><td>18</td><td>    <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">print</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">previous_prime</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span>
+</td></tr><tr><td>19</td><td>    <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">previous_prime</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-constant z-language z-python">None</span>
+</td></tr><tr><td>20</td><td>
+</td></tr><tr><td>21</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> ...
+</span></td></tr><tr><td>22</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> Continue from where we left off
+</span></td></tr><tr><td>23</td><td>
+</td></tr><tr><td>24</td><td><span class="z-meta z-statement z-loop z-for z-python"><span class="z-keyword z-control z-loop z-for z-python">for</span> <span class="z-meta z-generic-name z-python">next_prime</span> <span class="z-keyword z-control z-loop z-for z-in z-python">in</span></span><span class="z-meta z-statement z-loop z-for z-python"> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">prime_generator</span></span></span><span class="z-meta z-statement z-loop z-for z-python"><span class="z-punctuation z-section z-block z-loop z-for z-python">:</span></span>
+</td></tr><tr><td>25</td><td>    <span class="z-meta z-statement z-conditional z-if z-python"><span class="z-keyword z-control z-conditional z-if z-python">if</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">prime</span></span> <span class="z-keyword z-operator z-comparison z-python">&lt;</span> <span class="z-constant z-numeric z-integer z-decimal z-python">20</span><span class="z-punctuation z-section z-block z-conditional z-if z-python">:</span></span>
+</td></tr><tr><td>26</td><td>        <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">print</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">prime</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span>
+</td></tr><tr><td>27</td><td>    <span class="z-meta z-statement z-conditional z-else z-python"><span class="z-keyword z-control z-conditional z-else z-python">else</span><span class="z-punctuation z-section z-block z-conditional z-else z-python">:</span></span>
+</td></tr><tr><td>28</td><td>        <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">previous_prime</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">prime</span></span>
+</td></tr><tr><td>29</td><td>        <span class="z-keyword z-control z-flow z-break z-python">break</span>
+</td></tr><tr><td>30</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> prints out: 11, 13, 17, 19
+</span></td></tr><tr><td>31</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> previous prime become 23
+</span></td></tr></span></tbody></table></code></pre>
+<h3 id="a-starting-point"><a class="zola-anchor" href="#a-starting-point" aria-label="Anchor link for: a-starting-point">A starting point</a></h3>
+<p>Here is my initial idea for where to start:</p>
+<pre data-linenos data-lang="python" class="language-python z-code"><code class="language-python" data-lang="python"><table><tbody><tr><td>1</td><td><span class="z-source z-python"><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">primes</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-meta z-sequence z-list z-empty z-python"><span class="z-punctuation z-section z-sequence z-begin z-python">[</span><span class="z-punctuation z-section z-sequence z-end z-python">]</span></span>
+</td></tr><tr><td>2</td><td><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">range_0</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">iter</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">range</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-constant z-numeric z-integer z-decimal z-python">2</span><span class="z-punctuation z-separator z-arguments z-python">,</span> <span class="z-meta z-qualified-name z-python"><span class="z-variable z-other z-constant z-python">BIG_NUMBER</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span>
+</td></tr><tr><td>3</td><td>
+</td></tr><tr><td>4</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> Skip every nth number in a cyclic list
+</span></td></tr><tr><td>5</td><td><span class="z-meta z-function z-python"><span class="z-storage z-type z-function z-python"><span class="z-keyword z-declaration z-function z-python">def</span></span> <span class="z-entity z-name z-function z-python"><span class="z-meta z-generic-name z-python">skip_every</span></span></span><span class="z-meta z-function z-parameters z-python"><span class="z-punctuation z-section z-parameters z-begin z-python">(</span></span><span class="z-meta z-function z-parameters z-python"><span class="z-variable z-parameter z-python">skip_pattern</span><span class="z-punctuation z-separator z-parameters z-python">,</span> <span class="z-variable z-parameter z-python">generator</span><span class="z-punctuation z-section z-parameters z-end z-python">)</span></span><span class="z-meta z-function z-python"><span class="z-punctuation z-section z-function z-begin z-python">:</span></span>
+</td></tr><tr><td>6</td><td>    <span class="z-meta z-statement z-conditional z-if z-python"><span class="z-keyword z-control z-conditional z-if z-python">if</span> <span class="z-keyword z-operator z-logical z-python">not</span> <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">isinstance</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">skip_pattern</span></span><span class="z-punctuation z-separator z-arguments z-python">,</span> <span class="z-meta z-qualified-name z-python"><span class="z-support z-type z-python">list</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span><span class="z-punctuation z-section z-block z-conditional z-if z-python">:</span></span>
+</td></tr><tr><td>7</td><td>        <span class="z-meta z-statement z-raise z-python"><span class="z-keyword z-control z-flow z-raise z-python">raise</span> <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-type z-exception z-python">TypeError</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-string z-python"><span class="z-string z-quoted z-double z-python"><span class="z-punctuation z-definition z-string z-begin z-python">&quot;</span></span></span><span class="z-meta z-string z-python"><span class="z-string z-quoted z-double z-python">Skip pattern must be a list<span class="z-punctuation z-definition z-string z-end z-python">&quot;</span></span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span></span>
+</td></tr><tr><td>8</td><td>    
+</td></tr><tr><td>9</td><td>    <span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> Skip nothing if skip pattern is empty
+</span></td></tr><tr><td>10</td><td>    <span class="z-meta z-statement z-conditional z-if z-python"><span class="z-keyword z-control z-conditional z-if z-python">if</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">skip_pattern</span></span> <span class="z-keyword z-operator z-comparison z-python">==</span> <span class="z-meta z-sequence z-list z-empty z-python"><span class="z-punctuation z-section z-sequence z-begin z-python">[</span><span class="z-punctuation z-section z-sequence z-end z-python">]</span></span><span class="z-punctuation z-section z-block z-conditional z-if z-python">:</span></span>
+</td></tr><tr><td>11</td><td>        <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">skip_pattern</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-meta z-sequence z-list z-python"><span class="z-punctuation z-section z-sequence z-begin z-python">[</span><span class="z-constant z-numeric z-integer z-decimal z-python">0</span><span class="z-punctuation z-section z-sequence z-end z-python">]</span></span>
+</td></tr><tr><td>12</td><td>
+</td></tr><tr><td>13</td><td>    <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">skip_index</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-constant z-numeric z-integer z-decimal z-python">0</span>
+</td></tr><tr><td>14</td><td>
+</td></tr><tr><td>15</td><td>    <span class="z-meta z-statement z-loop z-while z-python"><span class="z-keyword z-control z-loop z-while z-python">while</span> <span class="z-constant z-language z-python">True</span><span class="z-punctuation z-section z-block z-loop z-while z-python">:</span></span>
+</td></tr><tr><td>16</td><td>        <span class="z-meta z-statement z-exception z-try z-python"><span class="z-keyword z-control z-exception z-try z-python">try</span><span class="z-punctuation z-section z-block z-exception z-try z-python">:</span></span>
+</td></tr><tr><td>17</td><td>            <span class="z-keyword z-control z-flow z-yield z-python">yield</span> <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">next</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">generator</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span>
+</td></tr><tr><td>18</td><td>            <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">skip</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-meta z-item-access z-python"><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">skip_pattern</span></span></span><span class="z-meta z-item-access z-python"><span class="z-punctuation z-section z-brackets z-begin z-python">[</span></span><span class="z-meta z-item-access z-arguments z-python"><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">skip_index</span></span></span><span class="z-meta z-item-access z-python"><span class="z-punctuation z-section z-brackets z-end z-python">]</span></span>
+</td></tr><tr><td>19</td><td>            <span class="z-meta z-statement z-loop z-for z-python"><span class="z-keyword z-control z-loop z-for z-python">for</span> <span class="z-meta z-generic-name z-python">i</span> <span class="z-keyword z-control z-loop z-for z-in z-python">in</span></span><span class="z-meta z-statement z-loop z-for z-python"> <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">range</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">skip</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span></span><span class="z-meta z-statement z-loop z-for z-python"><span class="z-punctuation z-section z-block z-loop z-for z-python">:</span></span>
+</td></tr><tr><td>20</td><td>                <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">next</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">generator</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span>
+</td></tr><tr><td>21</td><td>            <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">skip_index</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-meta z-group z-python"><span class="z-punctuation z-section z-group z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">skip_index</span></span> <span class="z-keyword z-operator z-arithmetic z-python">+</span> <span class="z-constant z-numeric z-integer z-decimal z-python">1</span><span class="z-punctuation z-section z-group z-end z-python">)</span></span> <span class="z-keyword z-operator z-arithmetic z-python">%</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">skip_index</span></span>
+</td></tr><tr><td>22</td><td>        <span class="z-meta z-statement z-exception z-catch z-python"><span class="z-keyword z-control z-exception z-catch z-python">except</span> <span class="z-support z-type z-exception z-python">StopIteration</span><span class="z-punctuation z-section z-block z-exception z-catch z-python">:</span></span>
+</td></tr><tr><td>23</td><td>            <span class="z-keyword z-control z-flow z-break z-python">break</span>
+</td></tr><tr><td>24</td><td>
+</td></tr><tr><td>25</td><td>    <span class="z-meta z-statement z-loop z-for z-python"><span class="z-keyword z-control z-loop z-for z-python">for</span> <span class="z-meta z-generic-name z-python">i</span> <span class="z-keyword z-control z-loop z-for z-in z-python">in</span></span><span class="z-meta z-statement z-loop z-for z-python"> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">generator</span></span></span><span class="z-meta z-statement z-loop z-for z-python"><span class="z-punctuation z-section z-block z-loop z-for z-python">:</span></span>
+</td></tr><tr><td>26</td><td>        <span class="z-keyword z-control z-flow z-yield z-python">yield</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">i</span></span>
+</td></tr><tr><td>27</td><td>
+</td></tr><tr><td>28</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> 2-multiples
+</span></td></tr><tr><td>29</td><td><span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">primes</span></span><span class="z-meta z-qualified-name z-python"><span class="z-punctuation z-accessor z-dot z-python">.</span></span><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-meta z-generic-name z-python">append</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">next</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">range_0</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span>
+</td></tr><tr><td>30</td><td><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">range_1</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-meta z-group z-python"><span class="z-punctuation z-section z-group z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">number</span></span> <span class="z-meta z-expression z-generator z-python"><span class="z-keyword z-control z-loop z-for z-generator z-python">for</span> <span class="z-meta z-generic-name z-python">number</span> <span class="z-keyword z-control z-loop z-for z-in z-python">in</span></span> <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-meta z-generic-name z-python">skip_every</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-sequence z-list z-python"><span class="z-punctuation z-section z-sequence z-begin z-python">[</span><span class="z-constant z-numeric z-integer z-decimal z-python">1</span><span class="z-punctuation z-section z-sequence z-end z-python">]</span></span><span class="z-punctuation z-separator z-arguments z-python">,</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">range_0</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span><span class="z-punctuation z-section z-group z-end z-python">)</span></span>
+</td></tr><tr><td>31</td><td>
+</td></tr><tr><td>32</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> 3-multiples without 2
+</span></td></tr><tr><td>33</td><td><span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">primes</span></span><span class="z-meta z-qualified-name z-python"><span class="z-punctuation z-accessor z-dot z-python">.</span></span><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-meta z-generic-name z-python">append</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">next</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">range_1</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span>
+</td></tr><tr><td>34</td><td><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">range_2</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-meta z-group z-python"><span class="z-punctuation z-section z-group z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">number</span></span> <span class="z-meta z-expression z-generator z-python"><span class="z-keyword z-control z-loop z-for z-generator z-python">for</span> <span class="z-meta z-generic-name z-python">number</span> <span class="z-keyword z-control z-loop z-for z-in z-python">in</span></span> <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-meta z-generic-name z-python">skip_every</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-sequence z-list z-python"><span class="z-punctuation z-section z-sequence z-begin z-python">[</span><span class="z-constant z-numeric z-integer z-decimal z-python">2</span><span class="z-punctuation z-section z-sequence z-end z-python">]</span></span><span class="z-punctuation z-separator z-arguments z-python">,</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">range_1</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span><span class="z-punctuation z-section z-group z-end z-python">)</span></span>
+</td></tr><tr><td>35</td><td>
+</td></tr><tr><td>36</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> 5-multiples without 2 or 3
+</span></td></tr><tr><td>37</td><td><span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">primes</span></span><span class="z-meta z-qualified-name z-python"><span class="z-punctuation z-accessor z-dot z-python">.</span></span><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-meta z-generic-name z-python">append</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-support z-function z-builtin z-python">next</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">range_2</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span>
+</td></tr><tr><td>38</td><td><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">range_3</span></span> <span class="z-keyword z-operator z-assignment z-python">=</span> <span class="z-meta z-group z-python"><span class="z-punctuation z-section z-group z-begin z-python">(</span><span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">number</span></span> <span class="z-meta z-expression z-generator z-python"><span class="z-keyword z-control z-loop z-for z-generator z-python">for</span> <span class="z-meta z-generic-name z-python">number</span> <span class="z-keyword z-control z-loop z-for z-in z-python">in</span></span> <span class="z-meta z-function-call z-python"><span class="z-meta z-qualified-name z-python"><span class="z-variable z-function z-python"><span class="z-meta z-generic-name z-python">skip_every</span></span></span></span><span class="z-meta z-function-call z-arguments z-python"><span class="z-punctuation z-section z-arguments z-begin z-python">(</span><span class="z-meta z-sequence z-list z-python"><span class="z-punctuation z-section z-sequence z-begin z-python">[</span><span class="z-constant z-numeric z-integer z-decimal z-python">6</span><span class="z-punctuation z-separator z-sequence z-python">,</span><span class="z-constant z-numeric z-integer z-decimal z-python">2</span><span class="z-punctuation z-section z-sequence z-end z-python">]</span></span><span class="z-punctuation z-separator z-arguments z-python">,</span> <span class="z-meta z-qualified-name z-python"><span class="z-meta z-generic-name z-python">range_2</span></span><span class="z-punctuation z-section z-arguments z-end z-python">)</span></span><span class="z-punctuation z-section z-group z-end z-python">)</span></span>
+</td></tr><tr><td>39</td><td>
+</td></tr><tr><td>40</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> ...
+</span></td></tr><tr><td>41</td><td><span class="z-comment z-line z-number-sign z-python"><span class="z-punctuation z-definition z-comment z-python">#</span> ...
+</span></td></tr><tr><td>42</td><td>
+</td></tr></span></tbody></table></code></pre>
+<p>Given a range, I create a new range that skips over all multiples of 2 above 2 (first prime found).
+Then, using that new range, I create another range that skips over all remaining multiples of 3 (next prime found).
+After that, another range is created that skips over all remaining multiples of 5 with the [6,2,6,2,...] pattern.
+Keep doing this until we are guaranteed to have a generator that yields only primes (up to some number). </p>
+<p>In the next post, I document my attempt(s) to try and implement this as an actual generator, as well as describe the result. </p>
+<h2 id="footnotes"><a class="zola-anchor" href="#footnotes" aria-label="Anchor link for: footnotes">Footnotes</a></h2>
+<div class="footnote-definition" id="negative-primes-footnote"><sup class="footnote-definition-label">1</sup>
+<p>While the assertion “there is no prime less than 2” is true for the common lay definition of prime, mathematically, there might a reason to consider a negative version of primes as primes themselves. <a href="https://t5k.org/notes/faq/negative_primes.html">The PrimePages’ FAQ on whether negative numbers can be prime</a> provides more information on this.</p>
+</div>
+
+</section>
+
+
+        
+<footer id="bottom-aside">
+ 
+
+<section class="grid">
+    
+    <div></div>
+    
+    <div></div>
+    
+    <article>
+        <a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;better_sieve&#x2F;part-1&#x2F;">
+            <p>
+                <strong>Part 1: First Attempts</strong>
+                <br />
+                <small>A walkthrough of my idea and some attempts to implement it.</small>
+                <br />
+                <em>
+                    Next
+                    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#arrow-right' />
+                    </svg>
+                </em>
+            </p>
+        </a>
+    </article>
+    
+</section>
+
+
+<hgroup>
+    <h2 id="comments"> <a href="#comments" class="zola-anchor">Comment Section</a></h2>
+    <p>
+        <strong>Powered by Giscus</strong>
+        </p>
+        <p>
+            <small><em>Note: You can go directly to GitHub Discussion at <a
+                        href="https://github.com/SurajSSingh/Tech-Tree-Blog/discussions/">https://github.com/SurajSSingh/Tech-Tree-Blog/discussions/</a>
+                    to comment</em></small>
+    </p>
+</hgroup>
+<script src="https://giscus.app/client.js" data-repo="SurajSSingh/Tech-Tree-Blog" data-repo-id="R_kgDOICIt2g"
+    data-category="Comments"
+    data-category-id="DIC_kwDOICIt2s4CTop9" data-mapping="title" data-strict="1" data-reactions-enabled="1"
+    data-emit-metadata="0" data-input-position="top" data-theme="preferred_color_scheme" data-lang="en" data-loading="lazy"
+    crossorigin="anonymous" async>
+    </script>
+<noscript>
+    <p>Comments cannot be rendered</p>
+</noscript>
+
+</footer>
+
+      </article>
+    </main>
+    <footer>
+      
+      
+
+
+
+<a role="img" href='https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;atom.xml' title='Atom Feed'
+    data-tooltip='Atom Feed' data-placement='top'
+    aria-label="Atom Feed">
+    <title>Atom Feed</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class=''>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#rss' />
+    </svg>
+</a>
+
+
+
+
+
+
+
+
+
+
+
+<a role="img" href='https:&#x2F;&#x2F;github.com&#x2F;SurajSSingh&#x2F;' title='GitHub'
+    data-tooltip='GitHub' data-placement='top'
+    aria-label="GitHub">
+    <title>GitHub</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class='feather'>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#github' />
+    </svg>
+</a>
+
+
+
+
+
+
+
+
+
+
+<a role="img" href='https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;suraj-s-singh&#x2F;' title='Linkedin'
+    data-tooltip='Linkedin' data-placement='top'
+    aria-label="Linkedin">
+    <title>Linkedin</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class='feather'>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#linkedin' />
+    </svg>
+</a>
+
+
+<p>© 2023 <a href="https://surajssingh.github.io">Suraj S. Singh</a></p>
+<p> Created with <a href="https://www.getzola.org/">Zola</a>, <a href="https://picocss.com/">Pico.CSS</a>, and <a
+        href="https://feathericons.com"> Feather Icons</a>.</p>
+<p>Hosted on <a href="https://github.com/surajssingh/Tech-Tree-Blog">GitHub</a>.</p>
+      
+    </footer>
+  </body>
+
+</html>

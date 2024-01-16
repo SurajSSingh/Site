@@ -1,0 +1,547 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+
+
+
+Devlog 1: 2023-06-20 | The Tech Tree Blog
+
+
+</title>
+    <meta name="description" content="
+
+Devlog going over step 0-5 of the guide.
+
+">
+    
+
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;thetechtreeblog.com/pico.custom.css" media="screen">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;thetechtreeblog.com/gutenberg/gutenberg.css" media="print">
+    <link rel="icon" href="https:&#x2F;&#x2F;thetechtreeblog.com/favicon.ico" sizes="any">
+    <link rel="icon" href="https:&#x2F;&#x2F;thetechtreeblog.com/img/favicon/favicon.svg" type="image/svg+xml" sizes="any">
+    <link rel="apple-touch-icon" href="https:&#x2F;&#x2F;thetechtreeblog.com/img/favicon/favicon-180.png">
+    <link rel="manifest" href="https:&#x2F;&#x2F;thetechtreeblog.com/manifest.json">
+    
+
+
+<meta name="giscus:backlink" content="https://surajssingh.github.io/Tech-Tree-Blog/devlog/maltar/1/">
+
+
+
+<script type="module" defer>
+    // Adapted from https://github.com/getzola/zola/issues/1285#issuecomment-870959320
+    for (const ref of document.getElementsByClassName('footnote-reference')) {
+        const hash = ref.children[0].hash.substring(1);
+        const refhash = 'ref:' + hash;
+        ref.id = refhash;
+    }
+
+    for (const footnote of document.getElementsByClassName('footnote-definition')) {
+        const hash = footnote.id;
+        const refhash = 'ref:' + hash;
+        const backlink = document.createElement('a');
+        backlink.href = '#' + refhash;
+        backlink.className = 'footnote-backlink';
+        backlink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline xmlns="http://www.w3.org/2000/svg" points="10 9 15 4 20 9"/><path xmlns="http://www.w3.org/2000/svg" d="M4 20h7a4 4 0 0 0 4-4V4"/>↩</svg>';
+        const paras = footnote.children;
+        const lastPara = paras[paras.length - 1];
+        lastPara.appendChild(backlink);
+    }
+</script>
+
+<script type="module" defer>
+    // Adapted from https://www.roboleary.net/2022/01/13/copy-code-to-clipboard-blog.html
+    const copyButtonLabel = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--contrast)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>';
+    const successCopiedButtonLabel = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--contrast)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-square"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>';
+
+    const successShowSeconds = 10;
+
+    // use a class selector if available
+    let blocks = document.querySelectorAll("pre");
+
+    blocks.forEach((block) => {
+        //        block.setAttribute("tabindex", 0);
+
+        // only add button if browser supports Clipboard API
+        if (navigator.clipboard) {
+            let button = document.createElement("button");
+            button.ariaLabel = "Copy To Clipboard";
+            button.classList.add(["copy-code"]);
+            button.classList.add(["outline"]);
+            button.setAttribute("data-tooltip", "Copy To Clipboard");
+            button.setAttribute("data-placement", "left");
+            button.innerHTML = copyButtonLabel;
+            block.prepend(button);
+
+            button.addEventListener("click", async () => {
+                await copyCode(block, button);
+            });
+        }
+    });
+
+    async function copyCode(block, button) {
+        let code = block.querySelector("code");
+        let text = code.innerHTML
+            .replaceAll(/<span .*?>/g, "")
+            .replaceAll(/<table><tbody><tr><td>\d+<\/td><td>/g, "")
+            .replaceAll(/(<\/mark>)?<\/td><\/tr><tr><td>(<mark>)?\d+(<\/mark>)?<\/td><td>(<mark>)?/g, "")
+            .replaceAll(/<\/td><\/tr><\/tbody><\/table>/g, "")
+            .replaceAll("</span>", "")
+            .replaceAll("&lt;", "<")
+            .replaceAll("&gt;", ">");
+
+        await navigator.clipboard.writeText(text);
+
+        // visual feedback that task is completed
+        button.innerHTML = successCopiedButtonLabel;
+        button.setAttribute("data-tooltip", "Successfully Copied");
+
+        setTimeout(() => {
+            button.innerHTML = copyButtonLabel;
+            button.setAttribute("data-tooltip", "Copy To Clipboard");
+        }, 1000 * successShowSeconds);
+    }
+</script>
+
+
+
+
+  </head>
+
+  <body>
+    <header>
+      
+      <a href="#maincontent" role="button" aria-label="Skip To Main Content" class="outline">Skip To Main</a>
+<nav>
+    <ul>
+        <li>
+            
+
+<a role="img" href='https:&#x2F;&#x2F;thetechtreeblog.com' title='Homepage'
+    data-tooltip='Homepage' data-placement='right'
+    aria-label="Homepage">
+    <title>Homepage</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class=''>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#home' />
+    </svg>
+</a>
+
+        </li>
+    </ul>
+    
+    
+    <ul>
+        
+        
+        <li><a href='https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;'> Blog</a></li>
+        
+        
+        <li><a href='https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;'> Devlogs</a></li>
+        
+    </ul>
+    
+</nav>
+
+<nav aria-label="breadcrumb">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li><a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;">Devlogs</a>
+        </li>
+        
+        
+        
+        
+        
+        
+        <li><a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;maltar&#x2F;"> Make a Lisp: Typed and Readable</a>
+        </li>
+        
+        
+        
+        
+        <li><a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;maltar&#x2F;1&#x2F;" aria-current="page" tabindex="-1">Devlog 1: 2023-06-20</a></li>
+        
+    </ul>
+</nav>
+
+
+      
+    </header>
+    <main id="maincontent">
+      <article>
+        
+
+<header>
+ 
+
+<hgroup>
+    <a href="#maincontent">
+        <h1 class="zola-anchor">
+            Devlog 1: 2023-06-20
+        </h1>
+    </a>
+    
+    <p>Devlog going over step 0-5 of the guide.</p>
+    
+</hgroup>
+
+    <details>
+        <summary>Page Details</summary>
+        
+        
+        <p>
+            
+            Author: Suraj S. Singh
+            
+        </p>
+        
+        
+        <p>Word Count: 953 words</p>
+        
+        <p>
+            
+            
+            <strong>First Created: 2023-06-20</strong>
+            
+            
+            <br />
+            
+        </p>
+        <p>
+            <em>License:
+                
+                <a href='https://creativecommons.org/licenses/by-nc-sa/4.0/'><abbr
+                        title='Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International'>CC BY-NC-SA 4.0<abbr></a>
+                
+            </em>
+        </p>
+        <p>
+        
+            Tags: <br />
+        <dl aria-label="taglist">
+            
+            
+            <dt>
+                <a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;programming-language&#x2F;">
+                    programming-language
+                </a>
+            </dt>
+            
+            
+            <dd>
+                <a href="https://thetechtreeblog.com/programming-language/rust/">rust</a>
+            </dd>
+            
+            <dd>
+                <a href="https://thetechtreeblog.com/programming-language/python/">python</a>
+            </dd>
+            
+            
+            
+        </dl>
+        
+        </p>
+    </details>
+</header>
+
+        
+
+
+<nav aria-label="table-of-content">
+    <details>
+        <summary role="button">Table Of Contents</summary>
+        <details open>
+        <summary><a href="https://thetechtreeblog.com/devlog/maltar/1/#">Devlog 1: 2023-06-20</a></summary>
+        <ol>
+            
+                <li>
+                    
+
+<details open>
+    <summary> <a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;maltar&#x2F;1&#x2F;#what-was-accomplished">What was accomplished</a></summary>
+    <ol>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;maltar&#x2F;1&#x2F;#step-0">Step 0</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;maltar&#x2F;1&#x2F;#step-1">Step 1</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;maltar&#x2F;1&#x2F;#step-2">Step 2</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;maltar&#x2F;1&#x2F;#step-3">Step 3</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;maltar&#x2F;1&#x2F;#step-4">Step 4</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;maltar&#x2F;1&#x2F;#step-5">Step 5</a>
+
+</li>
+        
+    </ol>
+</details>
+
+
+                    </li>
+            
+                <li>
+                    
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;maltar&#x2F;1&#x2F;#what-i-learned">What I learned</a>
+
+
+                    </li>
+            
+                <li>
+                    
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;maltar&#x2F;1&#x2F;#what-is-next">What is next</a>
+
+
+                    </li>
+            
+            
+            <li> <a href="#comments">Comments</a></li>
+            
+        </ol>
+        </details>
+        </details>
+</nav>
+
+
+<section id="content">
+<h2 id="what-was-accomplished">What was accomplished</h2>
+<p>Started working on making my own LISP following the guide from <a href="https://github.com/kanaka/mal">mal - Make a Lisp</a>, programming in Rust. 
+This is to help improve my Rust coding and learn how a language like LISP works to help with this month's #12in23 challenge (June - Summer of Sexps).
+Between June 10th and the 19th, I finished working on steps 0 to 5.</p>
+<h3 id="step-0">Step 0</h3>
+<p>Created a simple <abbr title="Read-Eval-Print-Loop">REPL</abbr> <em>(Read-Eval-Print-Loop)</em> using the <a href="https://github.com/kkawakam/rustyline">Rustyline crate</a>.
+Not too much of an issue working on this step.
+Mostly spent time looking at what libraries to include.</p>
+<p>For test cases, create a simple Python script to convert items in the test file to Rust <code>#[test_case]</code> (<strong>NOTE:</strong> <code>#[test_case]</code> using the <a href="https://github.com/frondeus/test-case">test-crate crate</a>, not the one built into Rust).
+Also moved code to a separate module to help isolate items between each step.</p>
+<h3 id="step-1">Step 1</h3>
+<p>Using the <a href="https://github.com/maciejhirsz/logos">Logos crate</a>, I created a simple parser for the language, which was straightforward to set up.
+I now understand the meaning of plumbing for parsers, seems tedious to pass and extract values, return what remains, and raise any issues.
+Parser combinators and generators provide a good way of handling that part and leaving the actual parsing idea up to you.</p>
+<p>Modified some of the symbols to parse due to Logos' parsing precedence.
+No major changes to the implementation, just some things made easier to parse (such as splitting all the symbols into their own token variant).</p>
+<p>Updated the source name to follow the guide's convention.</p>
+<h3 id="step-2">Step 2</h3>
+<p>Worked on the evaluation step of the program.
+Got a better idea of how LISP processes lists and functions.
+I remember trying to figure out how best to represent collection types.
+Initially landed on List being VecDequeue, Vector being Vector, and Map as Vector of tuples.</p>
+<p>This is also the step where I started to add documentation.
+While not very descriptive, it did provide some context when hovering over the type.</p>
+<h3 id="step-3">Step 3</h3>
+<p>For this step, I worked on adding the environment and ways to assign items to it.
+Creating the environment structure and defining the special forms <code>def!</code> and <code>let*</code> were straightforward to set up, though it did require modifying much of the functionality and types.
+I also learned to create macros for the lifted functions (arithmetic operators).
+This would eventually lead to adding more operations and functions fairly easily (though the macro would change between each step).
+Once that was completed, I updated the test case to work from the file directly.
+Once I got the structure down, debugging with the test file became a lot simpler.</p>
+<h3 id="step-4">Step 4</h3>
+<p>Step 4 was the first one that felt somewhat harder than prior steps.
+This step focused on adding <code>if</code>, <code>do</code>, and <code>fn*</code>, alongside some additional core functions.
+The lisp function was a bit more tricky, mostly with figuring out how to handle storing the environment.
+I was able to figure it out by boxing the current environment and using that within the function.
+I also overhauled my macros for adding operators and symbols to the environment. </p>
+<p>However, the biggest issue was working on implementing the string type correctly.
+Originally, I did no preprocessing or postprocessing for the strings, which lead to the test cases failing.
+Once I figured out what I need to escape (with help from <a href="https://github.com/kanaka/mal/tree/master/impls/rust">the current Rust implementation of mal</a>), I forgot that the way I printed items out was different from the implementation.
+I then did a rewrite for how to handle converting items to strings and made an update to the printing functionality for the test to make sure they all worked correctly.</p>
+<h3 id="step-5">Step 5</h3>
+<p><em>I initially wasn't going to include this step because I hadn't completed it, but once I rewrote the environment using what I learned from the Rust implementation, everything fell into place and all the tests passed.</em></p>
+<p>Step 5 was both hard and easy.
+It was hard in that I had some trouble getting the <abbr title="Tail-Call Optimization">TCO</abbr> <em>(Tail-Call Optimization)</em> working for the <code>eval</code> function, which required a rewrite of the environment structure.
+However, it was easy, as once that was finished and the update following the guide was applied, nothing seemed to break and it was working correctly.
+I also did a slight rewrite of the List and Vector type to use Rust vectors directly, as I came to learn how to do vector destructing using slices.</p>
+<h2 id="what-i-learned">What I learned</h2>
+<ul>
+<li>Interior Mutability with <a href="https://doc.rust-lang.org/std/rc/struct.Rc.html">Rc</a> and <a href="https://doc.rust-lang.org/std/cell/struct.RefCell.html">RefCell</a>
+<ul>
+<li><code>RefCell</code> is used for the dynamically borrowed <code>data</code> value of the environment. This allows modifying the value of <code>data</code> (such as setting a new symbol-value pair) without requiring the environment itself be mutable.</li>
+<li><code>Rc</code> is for explicitly adding reference counting to an object, allowing multiple ownership. Used to allow holding multiple references for an environment when an environment is changed (such as let-bindings or function closures).</li>
+</ul>
+</li>
+<li>Vector pattern matching using slices
+<ul>
+<li>This removes the need for using a VecDequeue data type, as I no longer need to use the <code>pop_front</code> function to get the first item.</li>
+<li>I can do complex matching, such as on specific enum variants, which makes it much easier to process the meaning of the match (also reducing the number of if-statements needed to extract the values).</li>
+</ul>
+</li>
+</ul>
+<h2 id="what-is-next">What is next</h2>
+<p>Finishing up the next set of steps from the guide.
+Once that is done, I might work on implementing the ideas from the <a href="https://readable.sourceforge.io/">Readable Lisp S-expressions Project</a>.</p>
+
+</section>
+
+
+        
+<footer id="bottom-aside">
+ 
+
+<section class="grid">
+    
+    <div></div>
+    
+    <div></div>
+    
+    <article>
+        <a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;maltar&#x2F;2&#x2F;">
+            <p>
+                <strong>Devlog 2: 2023-06-27</strong>
+                <br />
+                <small>Devlog of completing the Make-A-Lisp guide</small>
+                <br />
+                <em>
+                    Next
+                    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#arrow-right' />
+                    </svg>
+                </em>
+            </p>
+        </a>
+    </article>
+    
+</section>
+
+
+<hgroup>
+    <h2 id="comments"> <a href="#comments" class="zola-anchor">Comment Section</a></h2>
+    <p>
+        <strong>Powered by Giscus</strong>
+        </p>
+        <p>
+            <small><em>Note: You can go directly to GitHub Discussion at <a
+                        href="https://github.com/SurajSSingh/Tech-Tree-Blog/discussions/">https://github.com/SurajSSingh/Tech-Tree-Blog/discussions/</a>
+                    to comment</em></small>
+    </p>
+</hgroup>
+<script src="https://giscus.app/client.js" data-repo="SurajSSingh/Tech-Tree-Blog" data-repo-id="R_kgDOICIt2g"
+    data-category="Comments"
+    data-category-id="DIC_kwDOICIt2s4CTop9" data-mapping="title" data-strict="1" data-reactions-enabled="1"
+    data-emit-metadata="0" data-input-position="top" data-theme="preferred_color_scheme" data-lang="en" data-loading="lazy"
+    crossorigin="anonymous" async>
+    </script>
+<noscript>
+    <p>Comments cannot be rendered</p>
+</noscript>
+
+</footer>
+
+      </article>
+    </main>
+    <footer>
+      
+      
+
+
+
+<a role="img" href='https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;atom.xml' title='Atom Feed'
+    data-tooltip='Atom Feed' data-placement='top'
+    aria-label="Atom Feed">
+    <title>Atom Feed</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class=''>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#rss' />
+    </svg>
+</a>
+
+
+
+
+
+
+
+
+
+
+
+<a role="img" href='https:&#x2F;&#x2F;github.com&#x2F;SurajSSingh&#x2F;' title='GitHub'
+    data-tooltip='GitHub' data-placement='top'
+    aria-label="GitHub">
+    <title>GitHub</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class='feather'>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#github' />
+    </svg>
+</a>
+
+
+
+
+
+
+
+
+
+
+<a role="img" href='https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;suraj-s-singh&#x2F;' title='Linkedin'
+    data-tooltip='Linkedin' data-placement='top'
+    aria-label="Linkedin">
+    <title>Linkedin</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class='feather'>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#linkedin' />
+    </svg>
+</a>
+
+
+<p>© 2023 <a href="https://surajssingh.github.io">Suraj S. Singh</a></p>
+<p> Created with <a href="https://www.getzola.org/">Zola</a>, <a href="https://picocss.com/">Pico.CSS</a>, and <a
+        href="https://feathericons.com"> Feather Icons</a>.</p>
+<p>Hosted on <a href="https://github.com/surajssingh/Tech-Tree-Blog">GitHub</a>.</p>
+      
+    </footer>
+  </body>
+
+</html>

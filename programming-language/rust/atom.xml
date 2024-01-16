@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title>The Tech Tree Blog - rust</title>
+	<subtitle>Unlocking knowledge one post at a time.</subtitle>
+	<link href="https://thetechtreeblog.com/programming-language/rust/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://thetechtreeblog.com"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2023-06-27T00:00:00+00:00</updated>
+	<id>https://thetechtreeblog.com/programming-language/rust/atom.xml</id>
+	<entry xml:lang="en">
+		<title>Devlog 2: 2023-06-27</title>
+		<published>2023-06-27T00:00:00+00:00</published>
+		<updated>2023-06-27T00:00:00+00:00</updated>
+		<link rel="alternate" href="https://thetechtreeblog.com/devlog/maltar/2/" type="text/html"/>
+		<id>https://thetechtreeblog.com/devlog/maltar/2/</id>
+		<content type="html">&lt;h2 id=&quot;what-was-accomplished&quot;&gt;What was accomplished&lt;&#x2F;h2&gt;
+&lt;p&gt;Finished up all remaining steps from &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kanaka&#x2F;mal&quot;&gt;mal - Make a Lisp&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;step-6&quot;&gt;Step 6&lt;&#x2F;h3&gt;
+&lt;p&gt;In this step, I worked on loading strings from a file, command line arguments, evaluating from within the implementation, and working on implementing atoms.
+Much of the work on this step was simple enough.&lt;&#x2F;p&gt;
+&lt;p&gt;I did start thinking about adding additional items to the program.
+For example, command line parsing with Clap and using Miette for error showing.
+However, initial refactoring took too much time, so I put that on hold for later work once I finished the guide.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;step-7&quot;&gt;Step 7&lt;&#x2F;h3&gt;
+&lt;p&gt;This step focused on implementing quoting functionality.
+I was very confused about how to implement the &lt;code&gt;quasiquote()&lt;&#x2F;code&gt; function, even after looking at the Rust example. 
+The tests for quasiquote were not working. 
+However, I learned I made a silly mistake where the code was not in the correct if-branch case. 
+I also confused &lt;code&gt;cons&lt;&#x2F;code&gt; and &lt;code&gt;concat&lt;&#x2F;code&gt; in function, as well as unquote and splice, specifically forgetting to use them as special keywords rather than symbols.&lt;&#x2F;p&gt;
+&lt;p&gt;Going through this process got me thinking that maybe making these special forms as separate variants wasn&#x27;t a good idea. 
+The mix of symbols and special forms lead to much confusion about whether I was evaluating the correct form.&lt;&#x2F;p&gt;
+&lt;p&gt;I eventually got it all to work.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;step-8&quot;&gt;Step 8&lt;&#x2F;h3&gt;
+&lt;p&gt;For step 8, I worked on implementing Lisp macros.
+I had some confusion with the &lt;code&gt;macroexpand()&lt;&#x2F;code&gt; function, mainly with how the macro continues after applying the first run-through.
+Once I got my bearing with this and completed the function, the rest of the items in this step were simple to implement.
+I think I am beginning to feel comfortable programming in Rust.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;step-9&quot;&gt;Step 9&lt;&#x2F;h3&gt;
+&lt;p&gt;This step focused on implementing try-catch.
+This was fairly easy to accomplish using Rust&#x27;s &lt;code&gt;Result&lt;&#x2F;code&gt; enum. 
+I had the update the error case to add &lt;code&gt;Exceptions&lt;&#x2F;code&gt; and pass whatever value the user had.
+I did struggle a bit with the &lt;code&gt;apply()&lt;&#x2F;code&gt; function.
+This is mostly down to my incorrect mental model of how the function is applied to each item.&lt;&#x2F;p&gt;
+&lt;p&gt;The rest of the functionality was simple enough, though there was much more than before. 
+The hardest functionality to implement was the hash-map functions (namely &lt;code&gt;assoc&lt;&#x2F;code&gt; and &lt;code&gt;dissoc&lt;&#x2F;code&gt;), as I hadn&#x27;t worked with them yet, and I implement the map as a vector of tuple pairs. 
+Also had to fix equality for hashmaps since the ordering does not matter. 
+I&#x27;ll consider changing over when adding immutable data structures.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;step-a&quot;&gt;Step A&lt;&#x2F;h3&gt;
+&lt;p&gt;This final step was a catch-all for all other remaining items, such as reading a line from the user and more core functions.
+I spent way too much time trying to figure out why the step was failing when I added the &lt;code&gt;*host-language*&lt;&#x2F;code&gt; variable. 
+Turns out, I missed quotes and ending parentheses.
+That just emphasizes how much I need an error diagnostic system added to my implementation.&lt;&#x2F;p&gt;
+&lt;p&gt;On the other side, adding metadata for functions and collection was tedious more than hard.
+As well, I tried to get Rust evaluation working using the &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;evcxr&#x2F;evcxr&quot;&gt;Evcxr&lt;&#x2F;a&gt; crate but failed to get it working (the REPL would hang when evaluating Rust code).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-i-learned&quot;&gt;What I learned&lt;&#x2F;h2&gt;
+&lt;p&gt;I got more comfortable working with Rust and learn about some external libraries that could help later on. 
+Some of these include:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;evcxr&#x2F;evcxr&#x2F;tree&#x2F;main&#x2F;evcxr_repl&quot;&gt;Evcxr REPL&lt;&#x2F;a&gt;: Rust REPL, to allow running Rust code from my REPL.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;miette&#x2F;latest&#x2F;miette&#x2F;&quot;&gt;Miette&lt;&#x2F;a&gt;: Diagnostic library for more clearly showing where errors occur.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;bheisler&#x2F;criterion.rs&quot;&gt;Criterion&lt;&#x2F;a&gt;: Benchmarking library which can be a good way to check that I am making efficient changes.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;bodil&#x2F;im-rs&quot;&gt;Im&lt;&#x2F;a&gt;: A library that provides immutable data structures just like Clojure. &lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;rust-num&#x2F;num&quot;&gt;Num&lt;&#x2F;a&gt;: A generic numeric type library that can make interacting with different types of numbers a bit better.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;what-s-next&quot;&gt;What&#x27;s next&lt;&#x2F;h2&gt;
+&lt;p&gt;Do an initial refactor of what is created and make sure new improvements can easily be added.
+Make sure to benchmark the changes.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Devlog 1: 2023-06-20</title>
+		<published>2023-06-20T00:00:00+00:00</published>
+		<updated>2023-06-20T00:00:00+00:00</updated>
+		<link rel="alternate" href="https://thetechtreeblog.com/devlog/maltar/1/" type="text/html"/>
+		<id>https://thetechtreeblog.com/devlog/maltar/1/</id>
+		<content type="html">&lt;h2 id=&quot;what-was-accomplished&quot;&gt;What was accomplished&lt;&#x2F;h2&gt;
+&lt;p&gt;Started working on making my own LISP following the guide from &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kanaka&#x2F;mal&quot;&gt;mal - Make a Lisp&lt;&#x2F;a&gt;, programming in Rust. 
+This is to help improve my Rust coding and learn how a language like LISP works to help with this month&#x27;s #12in23 challenge (June - Summer of Sexps).
+Between June 10th and the 19th, I finished working on steps 0 to 5.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;step-0&quot;&gt;Step 0&lt;&#x2F;h3&gt;
+&lt;p&gt;Created a simple &lt;abbr title=&quot;Read-Eval-Print-Loop&quot;&gt;REPL&lt;&#x2F;abbr&gt; &lt;em&gt;(Read-Eval-Print-Loop)&lt;&#x2F;em&gt; using the &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kkawakam&#x2F;rustyline&quot;&gt;Rustyline crate&lt;&#x2F;a&gt;.
+Not too much of an issue working on this step.
+Mostly spent time looking at what libraries to include.&lt;&#x2F;p&gt;
+&lt;p&gt;For test cases, create a simple Python script to convert items in the test file to Rust &lt;code&gt;#[test_case]&lt;&#x2F;code&gt; (&lt;strong&gt;NOTE:&lt;&#x2F;strong&gt; &lt;code&gt;#[test_case]&lt;&#x2F;code&gt; using the &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;frondeus&#x2F;test-case&quot;&gt;test-crate crate&lt;&#x2F;a&gt;, not the one built into Rust).
+Also moved code to a separate module to help isolate items between each step.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;step-1&quot;&gt;Step 1&lt;&#x2F;h3&gt;
+&lt;p&gt;Using the &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;maciejhirsz&#x2F;logos&quot;&gt;Logos crate&lt;&#x2F;a&gt;, I created a simple parser for the language, which was straightforward to set up.
+I now understand the meaning of plumbing for parsers, seems tedious to pass and extract values, return what remains, and raise any issues.
+Parser combinators and generators provide a good way of handling that part and leaving the actual parsing idea up to you.&lt;&#x2F;p&gt;
+&lt;p&gt;Modified some of the symbols to parse due to Logos&#x27; parsing precedence.
+No major changes to the implementation, just some things made easier to parse (such as splitting all the symbols into their own token variant).&lt;&#x2F;p&gt;
+&lt;p&gt;Updated the source name to follow the guide&#x27;s convention.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;step-2&quot;&gt;Step 2&lt;&#x2F;h3&gt;
+&lt;p&gt;Worked on the evaluation step of the program.
+Got a better idea of how LISP processes lists and functions.
+I remember trying to figure out how best to represent collection types.
+Initially landed on List being VecDequeue, Vector being Vector, and Map as Vector of tuples.&lt;&#x2F;p&gt;
+&lt;p&gt;This is also the step where I started to add documentation.
+While not very descriptive, it did provide some context when hovering over the type.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;step-3&quot;&gt;Step 3&lt;&#x2F;h3&gt;
+&lt;p&gt;For this step, I worked on adding the environment and ways to assign items to it.
+Creating the environment structure and defining the special forms &lt;code&gt;def!&lt;&#x2F;code&gt; and &lt;code&gt;let*&lt;&#x2F;code&gt; were straightforward to set up, though it did require modifying much of the functionality and types.
+I also learned to create macros for the lifted functions (arithmetic operators).
+This would eventually lead to adding more operations and functions fairly easily (though the macro would change between each step).
+Once that was completed, I updated the test case to work from the file directly.
+Once I got the structure down, debugging with the test file became a lot simpler.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;step-4&quot;&gt;Step 4&lt;&#x2F;h3&gt;
+&lt;p&gt;Step 4 was the first one that felt somewhat harder than prior steps.
+This step focused on adding &lt;code&gt;if&lt;&#x2F;code&gt;, &lt;code&gt;do&lt;&#x2F;code&gt;, and &lt;code&gt;fn*&lt;&#x2F;code&gt;, alongside some additional core functions.
+The lisp function was a bit more tricky, mostly with figuring out how to handle storing the environment.
+I was able to figure it out by boxing the current environment and using that within the function.
+I also overhauled my macros for adding operators and symbols to the environment. &lt;&#x2F;p&gt;
+&lt;p&gt;However, the biggest issue was working on implementing the string type correctly.
+Originally, I did no preprocessing or postprocessing for the strings, which lead to the test cases failing.
+Once I figured out what I need to escape (with help from &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kanaka&#x2F;mal&#x2F;tree&#x2F;master&#x2F;impls&#x2F;rust&quot;&gt;the current Rust implementation of mal&lt;&#x2F;a&gt;), I forgot that the way I printed items out was different from the implementation.
+I then did a rewrite for how to handle converting items to strings and made an update to the printing functionality for the test to make sure they all worked correctly.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;step-5&quot;&gt;Step 5&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;em&gt;I initially wasn&#x27;t going to include this step because I hadn&#x27;t completed it, but once I rewrote the environment using what I learned from the Rust implementation, everything fell into place and all the tests passed.&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Step 5 was both hard and easy.
+It was hard in that I had some trouble getting the &lt;abbr title=&quot;Tail-Call Optimization&quot;&gt;TCO&lt;&#x2F;abbr&gt; &lt;em&gt;(Tail-Call Optimization)&lt;&#x2F;em&gt; working for the &lt;code&gt;eval&lt;&#x2F;code&gt; function, which required a rewrite of the environment structure.
+However, it was easy, as once that was finished and the update following the guide was applied, nothing seemed to break and it was working correctly.
+I also did a slight rewrite of the List and Vector type to use Rust vectors directly, as I came to learn how to do vector destructing using slices.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-i-learned&quot;&gt;What I learned&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Interior Mutability with &lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;std&#x2F;rc&#x2F;struct.Rc.html&quot;&gt;Rc&lt;&#x2F;a&gt; and &lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;std&#x2F;cell&#x2F;struct.RefCell.html&quot;&gt;RefCell&lt;&#x2F;a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;RefCell&lt;&#x2F;code&gt; is used for the dynamically borrowed &lt;code&gt;data&lt;&#x2F;code&gt; value of the environment. This allows modifying the value of &lt;code&gt;data&lt;&#x2F;code&gt; (such as setting a new symbol-value pair) without requiring the environment itself be mutable.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;Rc&lt;&#x2F;code&gt; is for explicitly adding reference counting to an object, allowing multiple ownership. Used to allow holding multiple references for an environment when an environment is changed (such as let-bindings or function closures).&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;Vector pattern matching using slices
+&lt;ul&gt;
+&lt;li&gt;This removes the need for using a VecDequeue data type, as I no longer need to use the &lt;code&gt;pop_front&lt;&#x2F;code&gt; function to get the first item.&lt;&#x2F;li&gt;
+&lt;li&gt;I can do complex matching, such as on specific enum variants, which makes it much easier to process the meaning of the match (also reducing the number of if-statements needed to extract the values).&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;what-is-next&quot;&gt;What is next&lt;&#x2F;h2&gt;
+&lt;p&gt;Finishing up the next set of steps from the guide.
+Once that is done, I might work on implementing the ideas from the &lt;a href=&quot;https:&#x2F;&#x2F;readable.sourceforge.io&#x2F;&quot;&gt;Readable Lisp S-expressions Project&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+</feed>

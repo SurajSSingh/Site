@@ -1,0 +1,557 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+
+
+
+Introduction to Reinforcement Learning | The Tech Tree Blog
+
+
+</title>
+    <meta name="description" content="
+
+An overview of reinforcement learning
+
+">
+    
+
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;thetechtreeblog.com/pico.custom.css" media="screen">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;thetechtreeblog.com/gutenberg/gutenberg.css" media="print">
+    <link rel="icon" href="https:&#x2F;&#x2F;thetechtreeblog.com/favicon.ico" sizes="any">
+    <link rel="icon" href="https:&#x2F;&#x2F;thetechtreeblog.com/img/favicon/favicon.svg" type="image/svg+xml" sizes="any">
+    <link rel="apple-touch-icon" href="https:&#x2F;&#x2F;thetechtreeblog.com/img/favicon/favicon-180.png">
+    <link rel="manifest" href="https:&#x2F;&#x2F;thetechtreeblog.com/manifest.json">
+    
+
+
+<meta name="giscus:backlink" content="https://surajssingh.github.io/Tech-Tree-Blog/blog/intro-reinforcement-learning/">
+
+
+
+<script type="module" defer>
+    // Adapted from https://github.com/getzola/zola/issues/1285#issuecomment-870959320
+    for (const ref of document.getElementsByClassName('footnote-reference')) {
+        const hash = ref.children[0].hash.substring(1);
+        const refhash = 'ref:' + hash;
+        ref.id = refhash;
+    }
+
+    for (const footnote of document.getElementsByClassName('footnote-definition')) {
+        const hash = footnote.id;
+        const refhash = 'ref:' + hash;
+        const backlink = document.createElement('a');
+        backlink.href = '#' + refhash;
+        backlink.className = 'footnote-backlink';
+        backlink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline xmlns="http://www.w3.org/2000/svg" points="10 9 15 4 20 9"/><path xmlns="http://www.w3.org/2000/svg" d="M4 20h7a4 4 0 0 0 4-4V4"/>↩</svg>';
+        const paras = footnote.children;
+        const lastPara = paras[paras.length - 1];
+        lastPara.appendChild(backlink);
+    }
+</script>
+
+<script type="module" defer>
+    // Adapted from https://www.roboleary.net/2022/01/13/copy-code-to-clipboard-blog.html
+    const copyButtonLabel = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--contrast)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>';
+    const successCopiedButtonLabel = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--contrast)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-square"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>';
+
+    const successShowSeconds = 10;
+
+    // use a class selector if available
+    let blocks = document.querySelectorAll("pre");
+
+    blocks.forEach((block) => {
+        //        block.setAttribute("tabindex", 0);
+
+        // only add button if browser supports Clipboard API
+        if (navigator.clipboard) {
+            let button = document.createElement("button");
+            button.ariaLabel = "Copy To Clipboard";
+            button.classList.add(["copy-code"]);
+            button.classList.add(["outline"]);
+            button.setAttribute("data-tooltip", "Copy To Clipboard");
+            button.setAttribute("data-placement", "left");
+            button.innerHTML = copyButtonLabel;
+            block.prepend(button);
+
+            button.addEventListener("click", async () => {
+                await copyCode(block, button);
+            });
+        }
+    });
+
+    async function copyCode(block, button) {
+        let code = block.querySelector("code");
+        let text = code.innerHTML
+            .replaceAll(/<span .*?>/g, "")
+            .replaceAll(/<table><tbody><tr><td>\d+<\/td><td>/g, "")
+            .replaceAll(/(<\/mark>)?<\/td><\/tr><tr><td>(<mark>)?\d+(<\/mark>)?<\/td><td>(<mark>)?/g, "")
+            .replaceAll(/<\/td><\/tr><\/tbody><\/table>/g, "")
+            .replaceAll("</span>", "")
+            .replaceAll("&lt;", "<")
+            .replaceAll("&gt;", ">");
+
+        await navigator.clipboard.writeText(text);
+
+        // visual feedback that task is completed
+        button.innerHTML = successCopiedButtonLabel;
+        button.setAttribute("data-tooltip", "Successfully Copied");
+
+        setTimeout(() => {
+            button.innerHTML = copyButtonLabel;
+            button.setAttribute("data-tooltip", "Copy To Clipboard");
+        }, 1000 * successShowSeconds);
+    }
+</script>
+
+
+
+
+  </head>
+
+  <body>
+    <header>
+      
+      <a href="#maincontent" role="button" aria-label="Skip To Main Content" class="outline">Skip To Main</a>
+<nav>
+    <ul>
+        <li>
+            
+
+<a role="img" href='https:&#x2F;&#x2F;thetechtreeblog.com' title='Homepage'
+    data-tooltip='Homepage' data-placement='right'
+    aria-label="Homepage">
+    <title>Homepage</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class=''>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#home' />
+    </svg>
+</a>
+
+        </li>
+    </ul>
+    
+    
+    <ul>
+        
+        
+        <li><a href='https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;'> Blog</a></li>
+        
+        
+        <li><a href='https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;devlog&#x2F;'> Devlogs</a></li>
+        
+    </ul>
+    
+</nav>
+
+<nav aria-label="breadcrumb">
+    
+    
+    
+    
+    
+    
+    
+
+    
+    <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li><a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;">Blog</a>
+        </li>
+        
+        
+        
+        
+        <li><a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;intro-reinforcement-learning&#x2F;" aria-current="page" tabindex="-1">Introduction to Reinforcement Learning</a></li>
+        
+    </ul>
+</nav>
+
+
+      
+    </header>
+    <main id="maincontent">
+      <article>
+        
+
+<header>
+ 
+
+<hgroup>
+    <a href="#maincontent">
+        <h1 class="zola-anchor">
+            Introduction to Reinforcement Learning
+        </h1>
+    </a>
+    
+    <p>An overview of reinforcement learning</p>
+    
+</hgroup>
+
+    <details>
+        <summary>Page Details</summary>
+        
+        
+        <p>
+            
+            Author: Suraj S. Singh
+            
+        </p>
+        
+        
+        <p>Word Count: 1228 words</p>
+        
+        <p>
+            
+            
+            <strong>First Created: 2023-03-01</strong>
+            
+            
+            <br />
+            
+        </p>
+        <p>
+            <em>License:
+                
+                <a href='https://creativecommons.org/licenses/by-nc-sa/4.0/'><abbr
+                        title='Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International'>CC BY-NC-SA 4.0<abbr></a>
+                
+            </em>
+        </p>
+        <p>
+        
+        </p>
+    </details>
+</header>
+
+        
+
+
+<nav aria-label="table-of-content">
+    <details>
+        <summary role="button">Table Of Contents</summary>
+        <details open>
+        <summary><a href="https://thetechtreeblog.com/blog/intro-reinforcement-learning/#">Introduction to Reinforcement Learning</a></summary>
+        <ol>
+            
+                <li>
+                    
+
+<details open>
+    <summary> <a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;intro-reinforcement-learning&#x2F;#what-is-reinforcement-learning">What is Reinforcement Learning?</a></summary>
+    <ol>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;intro-reinforcement-learning&#x2F;#comparison">Comparison</a>
+
+</li>
+        
+    </ol>
+</details>
+
+
+                    </li>
+            
+                <li>
+                    
+
+<details open>
+    <summary> <a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;intro-reinforcement-learning&#x2F;#overview-of-reinforcement-learning">Overview of Reinforcement Learning</a></summary>
+    <ol>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;intro-reinforcement-learning&#x2F;#applications">Applications</a>
+
+</li>
+        
+    </ol>
+</details>
+
+
+                    </li>
+            
+                <li>
+                    
+
+<details open>
+    <summary> <a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;intro-reinforcement-learning&#x2F;#resources">Resources</a></summary>
+    <ol>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;intro-reinforcement-learning&#x2F;#frameworks">Frameworks</a>
+
+</li>
+        
+        <li>
+
+<a href="https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;blog&#x2F;intro-reinforcement-learning&#x2F;#references">References</a>
+
+</li>
+        
+    </ol>
+</details>
+
+
+                    </li>
+            
+            
+            <li> <a href="#comments">Comments</a></li>
+            
+        </ol>
+        </details>
+        </details>
+</nav>
+
+
+<section id="content">
+<p>This blog post will go over a simple <strong>high level</strong> introduction to reinforcement learning. 
+I will focus on providing some major terms and explaining the common ideas for any reinforcement learning setup.
+My goal is to provide a good jumping off point for further research. 
+Also, this is meant to be language and software agnostic, but I will provide some resources for a couple of concrete implementations towards the end of the post. </p>
+<span id="continue-reading"></span><h2 id="what-is-reinforcement-learning"><a class="zola-anchor" href="#what-is-reinforcement-learning" aria-label="Anchor link for: what-is-reinforcement-learning">What is Reinforcement Learning?</a></h2>
+<p>
+    <dfn >Reinforcement Learning (<abbr title="Reinforcement Learning">RL</abbr>)</dfn>
+    is a kind of machine learning strategy/paradigm where one trains an intelligent agent using a reward structure. 
+The agent makes decisions based on what it observes and takes actions based on what it believes will maximize the total rewards.
+     
+<em>Note: Despite the name &quot;rewards&quot;, rewards can be either positive or <strong>negative</strong>.</em> 
+Agents under this learning system usually operate in a simulated environment where there are no exact actions that produce the best outcome but there is a predefined goal to reach. 
+It is up to the agent to figure out how best to accomplish the task using the rewards given during each training episode.</p>
+<h3 id="comparison"><a class="zola-anchor" href="#comparison" aria-label="Anchor link for: comparison">Comparison</a></h3>
+<p>Reinforcement learning can be contrasted with the other two main strategies of machine learning: Supervised Learning and Unsupervised Learning. </p>
+
+
+
+
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+<figure>
+    
+    <figcaption id='fig-1'>Figure 1:  </strong>Table comparing reinforcement learning, supervised learning, and unsupervised learning</figcaption>
+    
+    
+    <table><thead><tr><th style="text-align: left"><em>Type of Learning</em></th><th style="text-align: center"><strong>Reinforcement Learning</strong></th><th style="text-align: center">Supervised Learning</th><th style="text-align: center">Unsupervised Learning</th></tr></thead><tbody>
+<tr><td style="text-align: left"><em>Input Data</em></td><td style="text-align: center">Gathered from sensors</td><td style="text-align: center">Taken from Labelled Dataset</td><td style="text-align: center">Taken from Unlabelled Dataset</td></tr>
+<tr><td style="text-align: left"><em>Output Data</em></td><td style="text-align: center">Set of Action</td><td style="text-align: center">Predicted Label</td><td style="text-align: center">Self-determined Labels</td></tr>
+<tr><td style="text-align: left"><em>Mechanism of Learning</em></td><td style="text-align: center">Reward Optimization</td><td style="text-align: center">Optimize Expected Label</td><td style="text-align: center">Optimize Closeness to Dataset</td></tr>
+<tr><td style="text-align: left"><em>Approaches</em></td><td style="text-align: center">Q-Learning, Proximal Policy Optimization</td><td style="text-align: center">Classification, Regression</td><td style="text-align: center">Clustering, Association, Dimensionality Reduction</td></tr>
+<tr><td style="text-align: left"><em>Task Example</em></td><td style="text-align: center">Learning to navigate an obstacle course</td><td style="text-align: center">Check if email is spam</td><td style="text-align: center">Make a recommendation based on person's interests</td></tr>
+<tr><td style="text-align: left"><em>Human Example</em></td><td style="text-align: center">Playing video games</td><td style="text-align: center">School Exams</td><td style="text-align: center">Young child categorizing different animals</td></tr>
+</tbody></table>
+
+    
+    
+</figure>
+<p><em>Note: Despite the strategies being described separately, they are often used together. 
+For instance, a subclass of Reinforcement Learning is Behavior Imitation, in which the agent learns both the behavior to imitate (via Supervised Learning) and which actions the policy finds to be the best (via Reinforcement Learning)
+Another instance is Semi-Supervised Learning, which brings together aspects of Supervised learning and Unsupervised learning.</em></p>
+<h2 id="overview-of-reinforcement-learning"><a class="zola-anchor" href="#overview-of-reinforcement-learning" aria-label="Anchor link for: overview-of-reinforcement-learning">Overview of Reinforcement Learning</a></h2>
+<p>Reinforcement learning splits the world into two main parts. The first is the environment, which is essentially the abstract world of the simulation. 
+The environment is made up of many different states, which may or may not dynamically change by itself. 
+The environment is meant to be a simple and specific reconstruction of a more complex (real-world) system. 
+This reduction of the world space allows one to control what is important to learn and can speed up training, as there are fewer distractions inside the environment.</p>
+<p>The second part is the agent, which is an entity that exists within the environment capable of making decisions. 
+The agent is able to take in information from the environment, interpret that to make a decision, then do something in/to the environment, and then get some sort of reward.
+This builds the backbone of how the agent operates inside the environment and what it learns with this can be translated to more real world tasks.</p>
+
+
+
+
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+<figure>
+    
+    
+    <img src="./RL-Loop-Diagram.svg" alt="RL-Loop Diagram" title="RL-Loop Diagram" style="display:block;margin:auto;" class="dark-invert"/>
+    
+    
+    <figcaption id='fig-2'>Figure 2:  </strong>Image of the reinforcement learning loop (observe-act-reward) diagram.</figcaption>
+    
+</figure>
+<p>Let's walk through the loop. 
+The loop start with the environment in some particular state. 
+In order for the agent to determine the state, it needs to <strong>observe</strong> the state, usually with some kind of sensor. 
+The observation becomes the input data to the decision maker and the decision maker outputs a decision based on a specific policy it follows. 
+The decision is translated to an <strong>action</strong>, often implement with actuators, that may or may not change the state of the environment. 
+When an action is taken, there may also be a <strong>reward</strong> attached to the state change, which provides feedback to the agent. 
+The loop starts over again with the next state.</p>
+<p>This loop runs every &quot;turn&quot; during an episode. An episode can be thought of as a single simulated run from start to end. 
+During each training episode, the agent focuses on exploring the action space to see what yields the highest reward. 
+This allows the agent to get the widest set of data to work from when developing it's strategy. 
+On a testing episode, the agent will use the best-found strategy to solve the task. </p>
+<p>Generally, the agent includes the sensors, decision maker, and actuators in a single entity, but it may be possible to split them apart into different entities (for example, <a href="https://towardsdatascience.com/understanding-alphago-how-ai-think-and-learn-1-2-da07d3ec5278">Alpha Go</a> is just the decision maker that was trained in a simulated environment, but it requires a camera to see the real-world game board and a human player to play it pieces). 
+Also, while any kind of artificial intelligence model may be used for reinforcement learning, there is currently a focus on using neural networks for the decision making process. 
+This form of reinforcement learning is called deep reinforcement learning.</p>
+<h3 id="applications"><a class="zola-anchor" href="#applications" aria-label="Anchor link for: applications">Applications</a></h3>
+<p>There are a variety of use cases for reinforcement learning. 
+One is autonomous vehicle navigation (or more simply <strong>self-driving</strong> capabilities). 
+Using cars as an example, different companies trained their vehicles to navigate a road environment, using sensors such as cameras and LIDAR system and actuators that allow pressing accelerator/gas pedal and controlling the steering wheels. 
+Another is Natural Language Processing (<abbr title="Natural Language Processing">NLP</abbr>) applications such as <a href="https://openai.com/blog/chatgpt">ChatGPT</a>. 
+These models are trained on a vast corpus of human produced text and use reinforcement learning to produce more natural dialogue responses.
+One other is social media recommendation engines, which try to learn habits of the user and try to provide the best content to serve. 
+For example, YouTube's algorithm (based on current anecdotal trends) prioritize watch time.
+In order for an agent to get a reward, it will try to find the best video(s) to have the user watch and engage with, which increases the time spent on the site.</p>
+<h2 id="resources"><a class="zola-anchor" href="#resources" aria-label="Anchor link for: resources">Resources</a></h2>
+<p>Below are some resources for developing, training, and using Reinforcement Learning agents. 
+<em>Note, I have primarily worked with RL agents using Python and Unity, so I am biased toward those technologies.</em><br />
+If you have any other resources to contribute, please let us all know in the comments section.</p>
+<h3 id="frameworks"><a class="zola-anchor" href="#frameworks" aria-label="Anchor link for: frameworks">Frameworks</a></h3>
+<ul>
+<li><a href="https://github.com/Farama-Foundation/Gymnasium">Gymnasium</a>(successor to <a href="https://github.com/openai/gym">OpenAI's Gym</a>)</li>
+<li><a href="https://github.com/microsoft/malmo">Project Malmo from Microsoft</a></li>
+<li><a href="https://unity.com/products/machine-learning-agents">Unity</a> and the <a href="https://github.com/Unity-Technologies/ml-agents">ML-Agents package</a></li>
+</ul>
+<h3 id="references"><a class="zola-anchor" href="#references" aria-label="Anchor link for: references">References</a></h3>
+<ul>
+<li><a href="https://github.com/kengz/awesome-deep-rl">https://github.com/kengz/awesome-deep-rl</a>: A curated list of awesome Deep Reinforcement Learning resources.</li>
+<li><a href="https://deepai.org/machine-learning-glossary-and-terms/unsupervised-learning">Unsupervised Learning Definition on DeepAI by Thomas Wood</a></li>
+<li>IBM Posts on Machine Learning Topics:
+<ul>
+<li><a href="https://www.ibm.com/topics/machine-learning">What is machine learning?</a></li>
+<li><a href="https://www.ibm.com/topics/deep-learning">What is deep learning?</a></li>
+<li><a href="https://www.ibm.com/topics/unsupervised-learning">What is unsupervised learning?</a></li>
+</ul>
+</li>
+<li><a href="https://sitn.hms.harvard.edu/flash/2017/self-driving-cars-technology-risks-possibilities/">Self-driving Cars: The technology, risks and possibilities</a></li>
+</ul>
+
+</section>
+
+
+        
+<footer id="bottom-aside">
+ 
+
+
+<hgroup>
+    <h2 id="comments"> <a href="#comments" class="zola-anchor">Comment Section</a></h2>
+    <p>
+        <strong>Powered by Giscus</strong>
+        </p>
+        <p>
+            <small><em>Note: You can go directly to GitHub Discussion at <a
+                        href="https://github.com/SurajSSingh/Tech-Tree-Blog/discussions/">https://github.com/SurajSSingh/Tech-Tree-Blog/discussions/</a>
+                    to comment</em></small>
+    </p>
+</hgroup>
+<script src="https://giscus.app/client.js" data-repo="SurajSSingh/Tech-Tree-Blog" data-repo-id="R_kgDOICIt2g"
+    data-category="Comments"
+    data-category-id="DIC_kwDOICIt2s4CTop9" data-mapping="title" data-strict="1" data-reactions-enabled="1"
+    data-emit-metadata="0" data-input-position="top" data-theme="preferred_color_scheme" data-lang="en" data-loading="lazy"
+    crossorigin="anonymous" async>
+    </script>
+<noscript>
+    <p>Comments cannot be rendered</p>
+</noscript>
+
+</footer>
+
+      </article>
+    </main>
+    <footer>
+      
+      
+
+
+
+<a role="img" href='https:&#x2F;&#x2F;thetechtreeblog.com&#x2F;atom.xml' title='Atom Feed'
+    data-tooltip='Atom Feed' data-placement='top'
+    aria-label="Atom Feed">
+    <title>Atom Feed</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class=''>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#rss' />
+    </svg>
+</a>
+
+
+
+
+
+
+
+
+
+
+
+<a role="img" href='https:&#x2F;&#x2F;github.com&#x2F;SurajSSingh&#x2F;' title='GitHub'
+    data-tooltip='GitHub' data-placement='top'
+    aria-label="GitHub">
+    <title>GitHub</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class='feather'>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#github' />
+    </svg>
+</a>
+
+
+
+
+
+
+
+
+
+
+<a role="img" href='https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;suraj-s-singh&#x2F;' title='Linkedin'
+    data-tooltip='Linkedin' data-placement='top'
+    aria-label="Linkedin">
+    <title>Linkedin</title>
+    <svg width="36" height="36" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class='feather'>
+        <use href='https:&#x2F;&#x2F;thetechtreeblog.com/feather-sprite.svg#linkedin' />
+    </svg>
+</a>
+
+
+<p>© 2023 <a href="https://surajssingh.github.io">Suraj S. Singh</a></p>
+<p> Created with <a href="https://www.getzola.org/">Zola</a>, <a href="https://picocss.com/">Pico.CSS</a>, and <a
+        href="https://feathericons.com"> Feather Icons</a>.</p>
+<p>Hosted on <a href="https://github.com/surajssingh/Tech-Tree-Blog">GitHub</a>.</p>
+      
+    </footer>
+  </body>
+
+</html>
