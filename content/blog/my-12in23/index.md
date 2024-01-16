@@ -3,7 +3,6 @@ title = "Reflecting on #12in23 Challenge"
 description = "A post reviewing my work for Exercism's 12in23 Challenge"
 date = 2024-01-15
 # updated = 2024-01-15
-draft=true
 
 [taxonomies]
 programming-language = []
